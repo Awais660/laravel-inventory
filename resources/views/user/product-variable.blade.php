@@ -169,18 +169,23 @@
                                 <div class="product-single-filter">
                                     <label>Size:</label>
                                     <ul class="config-size-list ulSize">
+                                        @php
+                                            $count=0;
+                                        @endphp
                                         @foreach ($size as $sizes)
                                         @if ($sizes==$size[0])
-                                        <li class="active"><a href="javascript:;" data-change="{{$sizes->size}}"  class="change d-flex align-items-center justify-content-center">{{$sizes->size}}</a></li>
+                                        <li class="active" ><a href="javascript:;" onclick="markSelected(this, {{$count}});" data-change="{{$sizes->size}}"  class="change d-flex align-items-center justify-content-center">{{$sizes->size}}</a></li>
                                             @else
-                                            <li><a href="javascript:;" data-change="{{$sizes->size}}"  class="change d-flex align-items-center justify-content-center">{{$sizes->size}}</a></li>
+                                            <li ><a href="javascript:;" onclick="markSelected(this, {{$count}});" data-change="{{$sizes->size}}"  class="change d-flex align-items-center justify-content-center">{{$sizes->size}}</a></li>
                                         @endif
-                                        
+                                        @php
+                                            $count++;
+                                        @endphp
                                         @endforeach
                                     </ul>
                                 </div>
 
-                                <div class="product-single-filter">
+                                <div class="product-single-filter clear">
                                     <label></label>
                                     <a class="font1 text-uppercase clear-btn" href="#">Clear</a>
                                 </div>
@@ -571,48 +576,48 @@
      $(document).ready(function(){
         
 
-        $(".change").on("click",function(){
-        var change=$(this).data("change");
-        var id=$('#pid').val();
-        var msg=this;
-        $.ajax({
-            url:"{{url('change')}}",
-            method:"POST",
-            headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-            data:{change:change,id:id},
-            success:function(res){
-                $("#code").html(res.data[0].pcode);
-                $(".product-price").html(res.data[0].srp);
-                $(".stock").val(res.data[0].stock);
-                $(".unit").val(res.data[0].unit);
-                $(".srp").val(res.data[0].srp);
-                $(".size").val(res.data[0].size);
-                $(".color").val(res.data[0].color);
-                $(".image").val(res.image);
-                $(".pcode").val(res.data[0].pcode);
+//         $(".change").on("click",function(){
+//         var change=$(this).data("change");
+//         var id=$('#pid').val();
+//         var msg=this;
+//         $.ajax({
+//             url:"{{url('change')}}",
+//             method:"POST",
+//             headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+//             data:{change:change,id:id},
+//             success:function(res){
+//                 $("#code").html(res.data[0].pcode);
+//                 $(".product-price").html(res.data[0].srp);
+//                 $(".stock").val(res.data[0].stock);
+//                 $(".unit").val(res.data[0].unit);
+//                 $(".srp").val(res.data[0].srp);
+//                 $(".size").val(res.data[0].size);
+//                 $(".color").val(res.data[0].color);
+//                 $(".image").val(res.image);
+//                 $(".pcode").val(res.data[0].pcode);
                 
-                $(".ulcolor").html(function() {
-  var htmlContent = "";
-  var count = 0;
-  $.each(res.data, function(key, val) {
-    if(val.color==res.data[0].color){
-        htmlContent += `<li class="active" onclick="markActive(`+count+`);">
-                      <a href="javascript:;" class="form filter-color border-0" onclick="handleClick('`+val.color+`')" data-cls="`+val.color+`" style="background-color: `+val.color+`"></a>
-                    </li>`;
-    }else{
-    htmlContent += `<li class="" onclick="markActive(`+count+`);">
-                      <a href="javascript:;" class="form filter-color border-0" onclick="handleClick('`+val.color+`')" data-cls="`+val.color+`" style="background-color: `+val.color+`"></a>
-                    </li>`;
-                }
-                    count++;
-  });
-  return htmlContent;
-});
+//                 $(".ulcolor").html(function() {
+//   var htmlContent = "";
+//   var count = 0;
+//   $.each(res.data, function(key, val) {
+//     if(val.color==res.data[0].color){
+//         htmlContent += `<li class="active" onclick="markActive(`+count+`);">
+//                       <a href="javascript:;" class="form filter-color border-0" onclick="handleClick('`+val.color+`')" data-cls="`+val.color+`" style="background-color: `+val.color+`"></a>
+//                     </li>`;
+//     }else{
+//     htmlContent += `<li class="" onclick="markActive(`+count+`);">
+//                       <a href="javascript:;" class="form filter-color border-0" onclick="handleClick('`+val.color+`')" data-cls="`+val.color+`" style="background-color: `+val.color+`"></a>
+//                     </li>`;
+//                 }
+//                     count++;
+//   });
+//   return htmlContent;
+// });
                 
-            }
-        });
+//             }
+//         });
     
-    });
+//     });
 
 
     $(document).on("click","#additem",function(stop){
@@ -709,8 +714,25 @@ function handleClick(message){
     }
 
 function markActive(index) {
-    var liElements = document.querySelectorAll('.ulcolor li');
+    var liElements2 = document.querySelectorAll('.ulSize li');
+var liElements = document.querySelectorAll('.ulcolor li');
 
+var isLiElements2Active = false;
+
+// Check if any li in liElements2 has the 'active' class
+liElements2.forEach(function (li) {
+  if (li.classList.contains('active')) {
+    isLiElements2Active = true;
+  }
+});
+
+if (!liElements[index].classList.contains('active') && !isLiElements2Active) {
+    $(".clear").css("display", "none");
+}else{
+    $(".clear").css("display", "block");
+}
+
+    if (!liElements[index].classList.contains('active')) {
     // Remove "active" class from all <li> elements
     liElements.forEach(function(li) {
       li.classList.remove('active');
@@ -718,5 +740,84 @@ function markActive(index) {
 
     // Add "active" class to the clicked <li> element
     liElements[index].classList.add('active');
+
+    }else{
+        liElements[index].classList.remove('active');
+    }
+  }
+
+
+  function markSelected(element,index) {
+    
+    var liElements2 = document.querySelectorAll('.ulSize li');
+var liElements = document.querySelectorAll('.ulcolor li');
+
+var isLiElementsActive = false;
+
+// Check if any li in liElements2 has the 'active' class
+liElements.forEach(function (li) {
+  if (li.classList.contains('active')) {
+    isLiElementsActive = true;
+  }
+});
+
+if (!liElements2[index].classList.contains('active') && !isLiElementsActive) {
+    $(".clear").css("display", "none");
+}else if(!liElements2[index].classList.contains('active') && isLiElementsActive){
+    $(".clear").css("display", "block");
+}else if(liElements2[index].classList.contains('active') && isLiElementsActive){
+    $(".clear").css("display", "none");
+}else if(liElements2[index].classList.contains('active') && !isLiElementsActive){
+    $(".clear").css("display", "none");
+}
+
+    if (liElements2[index].classList.contains('active')) {
+    // Remove "active" class from all <li> elements
+    liElements.forEach(function(li) {
+      li.classList.remove('active');
+    });
+
+    }else{
+        
+        var change = element.getAttribute('data-change');
+        var id=$('#pid').val();
+        var msg=this;
+        $.ajax({
+            url:"{{url('change')}}",
+            method:"POST",
+            headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+            data:{change:change,id:id},
+            success:function(res){
+                $("#code").html(res.data[0].pcode);
+                $(".product-price").html(res.data[0].srp);
+                $(".stock").val(res.data[0].stock);
+                $(".unit").val(res.data[0].unit);
+                $(".srp").val(res.data[0].srp);
+                $(".size").val(res.data[0].size);
+                $(".color").val(res.data[0].color);
+                $(".image").val(res.image);
+                $(".pcode").val(res.data[0].pcode);
+                
+                $(".ulcolor").html(function() {
+  var htmlContent = "";
+  var count = 0;
+  $.each(res.data, function(key, val) {
+    if(val.color==res.data[0].color){
+        htmlContent += `<li class="active" onclick="markActive(`+count+`);">
+                      <a href="javascript:;" class="form filter-color border-0" onclick="handleClick('`+val.color+`')" data-cls="`+val.color+`" style="background-color: `+val.color+`"></a>
+                    </li>`;
+    }else{
+    htmlContent += `<li class="" onclick="markActive(`+count+`);">
+                      <a href="javascript:;" class="form filter-color border-0" onclick="handleClick('`+val.color+`')" data-cls="`+val.color+`" style="background-color: `+val.color+`"></a>
+                    </li>`;
+                }
+                    count++;
+  });
+  return htmlContent;
+});
+                
+            }
+        });
+    }
   }
     </script>
