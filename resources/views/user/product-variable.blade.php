@@ -76,7 +76,7 @@
 												@php
 													$images=unserialize($pro->product_attr->image);
 												@endphp
-                                                @foreach ($images as $images)
+                                                @foreach ($images as $image)
                                 <div class="owl-dot">
                                     <img src="{{"../images/".$image}}" width="110" height="110" alt="product-thumbnail" />
                                 </div>
