@@ -150,22 +150,17 @@
                             <div class="product-filters-container">
                                 <div class="product-single-filter"><label>Color:</label>
                                     <ul class="config-size-list config-color-list config-filter-list ulcolor">
-                                        @php
-                                            $count=0;
-                                        @endphp
+                                        
 													@foreach ($color as $colors)
                                                     @if ($colors==$color[0])
-                                                    <li class="active" onclick="handleClick({{$count}},'{{$colors->color}}')">
-                                                        <a href="javascript:;" class="form filter-color border-0"  data-cls="{{$colors->color}}"style="background-color: {{$colors->color}};"></a>
+                                                    <li class="active" >
+                                                        <a href="javascript:;" class="form filter-color border-0" onclick="handleClick('{{$colors->color}}')"  data-cls="{{$colors->color}}"style="background-color: {{$colors->color}};"></a>
                                                     </li>
                                                         @else
-                                                        <li class="" onclick="handleClick({{$count}},'{{$colors->color}}')" >
-                                                            <a href="javascript:;" class="form filter-color border-0" data-cls="{{$colors->color}}"style="background-color: {{$colors->color}};"></a>
+                                                        <li class="" >
+                                                            <a href="javascript:;" class="form filter-color border-0" onclick="handleClick('{{$colors->color}}')"  data-cls="{{$colors->color}}"style="background-color: {{$colors->color}};"></a>
                                                         </li>
                                                     @endif
-                                                    @php
-                                                        $count++;
-                                                    @endphp
                                         @endforeach
                                         
                                     </ul>
@@ -179,9 +174,9 @@
                                         @endphp
                                         @foreach ($size as $sizes)
                                         @if ($sizes==$size[0])
-                                        <li class="active" onclick="markSelected(this, {{$count}});" data-change="{{$sizes->size}}"><a href="javascript:;"  class="change d-flex align-items-center justify-content-center">{{$sizes->size}}</a></li>
+                                        <li class="active" ><a href="javascript:;" onclick="markSelected(this, {{$count}});" data-change="{{$sizes->size}}"  class="change d-flex align-items-center justify-content-center">{{$sizes->size}}</a></li>
                                             @else
-                                            <li onclick="markSelected(this, {{$count}});" data-change="{{$sizes->size}}"><a href="javascript:;" class="change d-flex align-items-center justify-content-center">{{$sizes->size}}</a></li>
+                                            <li ><a href="javascript:;" onclick="markSelected(this, {{$count}});" data-change="{{$sizes->size}}"  class="change d-flex align-items-center justify-content-center">{{$sizes->size}}</a></li>
                                         @endif
                                         @php
                                             $count++;
@@ -190,9 +185,9 @@
                                     </ul>
                                 </div>
 
-                                <div class="">
-                                    {{-- <label></label>
-                                    <a class="font1 text-uppercase clear-btn" href="#">Clear</a> --}}
+                                <div class="product-single-filter clear">
+                                    <label></label>
+                                    <a class="font1 text-uppercase clear-btn" href="#">Clear</a>
                                 </div>
                                 <!---->
                             </div>
@@ -583,6 +578,22 @@ function markSelected(element,index) {
     var liElements2 = document.querySelectorAll('.ulSize li');
 var liElements = document.querySelectorAll('.ulcolor li');
 
+var isLiElementsActive = false;
+
+// Check if any li in liElements2 has the 'active' class
+liElements.forEach(function (li) {
+  if (li.classList.contains('active')) {
+    isLiElementsActive = true;
+  }
+});
+
+if (!liElements2[index].classList.contains('active') ) {
+   alert(1);
+    $(".clear").css("display", "block");
+}else if(liElements2[index].classList.contains('active')){
+    alert(2);
+    $(".clear").css("display", "block");
+}
     if (liElements2[index].classList.contains('active')) {
     // Remove "active" class from all <li> elements
     liElements.forEach(function(li) {
@@ -615,13 +626,12 @@ var liElements = document.querySelectorAll('.ulcolor li');
   var count = 0;
   $.each(res.data, function(key, val) {
     if(val.color==res.data[0].color){
-        htmlContent += `<li class="active" onclick="markActive(${count}, '${val.color}');">
-                      <a href="javascript:;" class="form filter-color border-0"  data-cls="`+val.color+`" style="background-color: `+val.color+`"></a>
+        htmlContent += `<li class="active" onclick="markActive(`+count+`);">
+                      <a href="javascript:;" class="form filter-color border-0" onclick="handleClick('`+val.color+`')" data-cls="`+val.color+`" style="background-color: `+val.color+`"></a>
                     </li>`;
     }else{
-    htmlContent += `<li class="" onclick="markActive(${count}, '${val.color}');">
-                      <a href="javascript:;" class="form filter-color border-0" 
-                       data-cls="`+val.color+`" style="background-color: `+val.color+`"></a>
+    htmlContent += `<li class="" onclick="markActive(`+count+`);">
+                      <a href="javascript:;" class="form filter-color border-0" onclick="handleClick('`+val.color+`')" data-cls="`+val.color+`" style="background-color: `+val.color+`"></a>
                     </li>`;
                 }
                     count++;
@@ -723,20 +733,39 @@ var liElements = document.querySelectorAll('.ulcolor li');
 
 });
 
-function handleClick(index,message){
+function handleClick(message){
    
-    var liElements = document.querySelectorAll('.ulcolor li');
-
-if (!liElements[index].classList.contains('active')) {
-$(".color").val(message);
-}else{
-    $(".color").val("");
-}
+                $(".color").val(message);
     
     }
 
-function markActive(index,message) {
+function markActive(index) {
+    
+    var liElements2 = document.querySelectorAll('.ulSize li');
 var liElements = document.querySelectorAll('.ulcolor li');
+
+var isLiElements2Active = false;
+
+// Check if any li in liElements2 has the 'active' class
+liElements2.forEach(function (li) {
+  if (li.classList.contains('active')) {
+    isLiElements2Active = true;
+  }
+});
+
+if (!liElements[index].classList.contains('active') && !isLiElements2Active) {
+    
+    $(".clear").css("display", "none");
+}else if(liElements[index].classList.contains('active') && isLiElements2Active){
+    
+    $(".clear").css("display", "none");
+}else if(!liElements[index].classList.contains('active') && isLiElements2Active){
+   
+    $(".clear").css("display", "block");
+}else if(liElements[index].classList.contains('active') && !isLiElements2Active){
+   
+    $(".clear").css("display", "none");
+}
 
     if (!liElements[index].classList.contains('active')) {
     // Remove "active" class from all <li> elements
@@ -746,10 +775,9 @@ var liElements = document.querySelectorAll('.ulcolor li');
 
     // Add "active" class to the clicked <li> element
     liElements[index].classList.add('active');
-    $(".color").val(message);
+
     }else{
         liElements[index].classList.remove('active');
-        $(".color").val("");
     }
   }
 
