@@ -45,6 +45,9 @@ class Kernel extends HttpKernel
         'authlogin'=>[
             \App\Http\Middleware\authlogin::class,
         ],
+        'userauth'=>[
+            \App\Http\Middleware\userauth::class,
+        ],
     ];
 
     /**

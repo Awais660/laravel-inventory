@@ -30,18 +30,19 @@
 									<h2 class="title">Login</h2>
 								</div>
 
-								<form action="#">
+								<form action="{{url('/user')}}" method="POST">
+									@csrf
 									<label for="login-email">
 										Username or email address
 										<span class="required">*</span>
 									</label>
-									<input type="email" class="form-input form-wide" id="login-email" required />
+									<input type="email" name="email" class="form-input form-wide" id="login-email" required />
 
 									<label for="login-password">
 										Password
 										<span class="required">*</span>
 									</label>
-									<input type="password" class="form-input form-wide" id="login-password" required />
+									<input type="password" name="password" class="form-input form-wide" id="login-password" required />
 
 									<div class="form-footer">
 										<div class="custom-control custom-checkbox mb-0">
@@ -54,7 +55,7 @@
 											class="forget-password text-dark form-footer-right">Forgot
 											Password?</a>
 									</div>
-									<button type="submit" class="btn btn-dark btn-md w-100">
+									<button type="submit" name="login" class="btn btn-dark btn-md w-100">
 										LOGIN
 									</button>
 								</form>

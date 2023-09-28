@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 use Illuminate\Support\Facades\DB;
-use App\Models\{Category,product};
+use App\Models\{Category,product,user,admin};
 
 use Illuminate\Http\Request;
 
@@ -121,5 +121,34 @@ class users extends Controller
     public function addcart(request $req)
     {
         
+    }
+
+    function login(Request $req)
+    {
+        $req->validate([
+            "email"=>'required',
+            "password"=>'required',
+        ]);
+        $email = $req->email;
+        $password = $req->password;
+        $data = user::where("email", "=", $email)->where("password", "=", $password)->first();
+        if ($data) {
+            session()->put("useremail", $email);
+            return redirect("shop");
+        } else {
+            $data1 = admin::where("email", "=", $email)->where("password", "=", $password)->first();
+            if ($data1) {
+                session()->put("adminemail", $email);
+                return view('admin.index');
+            } else {
+                return redirect("userLogin")->with("errormsg", "email password not correct");
+            }
+        }
+    }
+
+    function userLogout()
+    {
+            session()->pull("useremail");
+            return redirect("userLogin");
     }
 }

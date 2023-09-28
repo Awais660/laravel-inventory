@@ -5,7 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 
-class authlogin
+class userauth
 {
     /**
      * Handle an incoming request.
@@ -16,14 +16,10 @@ class authlogin
      */
     public function handle(Request $request, Closure $next)
     {
-       
-        if (session()->has("adminemail")) {
+        if (session()->has("useremail")) {
             return $next($request);
         } else {
             return redirect("userLogin")->with("errormsg","You info is not correct");
         }
-
-        
-
     }
 }
