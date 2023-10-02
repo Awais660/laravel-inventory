@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\authlogin;
 use App\Http\Middleware\userauth;
+use App\Http\Middleware\emailVerified;
+use App\Http\Middleware\emailNotVerified;
 use App\Http\Controllers\{admins,CategoryController,SubcategoryController,SupplierController,QuantityController,ColorController,ProductController,users,userController};
 /*
 |--------------------------------------------------------------------------
@@ -59,10 +61,18 @@ Route::controller(users::class)->group(function(){
     Route::get("subcat", "subcat");
     Route::post("change", "change");
     Route::post("user", "login");
+    Route::get("register", "registerView");
+    Route::post("register", "register");
 });
 
+Route::group(["middleware" => ['userauth','emailNotVerified']], function () {
+Route::get('must-verify', [Users::class, 'verifyEmail']);
+Route::get('sendMail', [Users::class, 'sendMail']);
+Route::get('verified', [Users::class, 'verified']);
+Route::get('resend', [Users::class, 'resend']);
+});
 
-Route::group(["middleware" => ['userauth']], function () {
+Route::group(["middleware" => ['userauth','emailVerified']], function () {
     Route::controller(users::class)->group(function(){
     Route::get("cart", "cart");
     Route::get("checkout", "checkout");

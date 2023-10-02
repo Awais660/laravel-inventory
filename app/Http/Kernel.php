@@ -48,6 +48,13 @@ class Kernel extends HttpKernel
         'userauth'=>[
             \App\Http\Middleware\userauth::class,
         ],
+
+        'emailVerified'=>[
+            \App\Http\Middleware\emailVerified::class,
+        ],
+        'emailNotVerified'=>[
+            \App\Http\Middleware\EmailNotVerified::class,
+        ],
     ];
 
     /**

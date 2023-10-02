@@ -67,6 +67,7 @@
                                     <li><a href="{{url('cart')}}">Cart</a></li>
                                     @if (!session()->has("useremail"))
                                     <li><a href="{{url('userLogin')}}">Log In</a></li>
+                                    <li><a href="{{url('register')}}">Register</a></li>
                                     @else
                                     <li><a href="{{url('userLogout')}}">Logout</a></li>
                                     @endif

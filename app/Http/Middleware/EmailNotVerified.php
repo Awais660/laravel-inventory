@@ -3,9 +3,10 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use App\Models\User;
 use Illuminate\Http\Request;
 
-class userauth
+class EmailNotVerified
 {
     /**
      * Handle an incoming request.
@@ -16,10 +17,13 @@ class userauth
      */
     public function handle(Request $request, Closure $next)
     {
-        if (session()->has("useremail")) {
-            return $next($request);
-        } else {
-            return redirect("userLogin");
+        if(session()->has("useremail")){
+            $email=Session('useremail');
+            $user = User::where('email', $email)->first();
+            if($user->email_verified_at == true){
+                return redirect('shop');
+            }
         }
+        return $next($request);
     }
 }

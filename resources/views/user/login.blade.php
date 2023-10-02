@@ -11,13 +11,13 @@
 								<li class="breadcrumb-item"><a href="{{url('user')}}">Home</a></li>
 								<li class="breadcrumb-item"><a href="{{url('cat')}}">Shop</a></li>
 								<li class="breadcrumb-item active" aria-current="page">
-									My Account
+									Login Account
 								</li>
 							</ol>
 						</div>
 					</nav>
 
-					<h1>My Account</h1>
+					<h1>Login Account</h1>
 				</div>
 			</div>
 
@@ -25,7 +25,14 @@
 				<div class="row">
 					<div class="col-lg-10 mx-auto">
 						<div class="row">
+							<div class="col-md-3">
+							</div>
 							<div class="col-md-6">
+								@if (session("errormsg")!="")
+                            <div class="alert alert-danger" role="alert">
+                                    <strong>{{session("errormsg") }}</strong>
+                            </div>
+                            @endif
 								<div class="heading mb-1">
 									<h2 class="title">Login</h2>
 								</div>
@@ -37,12 +44,22 @@
 										<span class="required">*</span>
 									</label>
 									<input type="email" name="email" class="form-input form-wide" id="login-email" required />
+									@error('email')
+                            <div class="alert alert-danger" role="alert">
+                                    <strong>{{$message}}</strong>
+                            </div>
+                            @enderror
 
 									<label for="login-password">
 										Password
 										<span class="required">*</span>
 									</label>
 									<input type="password" name="password" class="form-input form-wide" id="login-password" required />
+									@error('password')
+									<div class="alert alert-danger" role="alert">
+											<strong>{{$message}}</strong>
+									</div>
+									@enderror
 
 									<div class="form-footer">
 										<div class="custom-control custom-checkbox mb-0">
@@ -60,32 +77,7 @@
 									</button>
 								</form>
 							</div>
-							<div class="col-md-6">
-								<div class="heading mb-1">
-									<h2 class="title">Register</h2>
-								</div>
-
-								<form action="#">
-									<label for="register-email">
-										Email address
-										<span class="required">*</span>
-									</label>
-									<input type="email" class="form-input form-wide" id="register-email" required />
-
-									<label for="register-password">
-										Password
-										<span class="required">*</span>
-									</label>
-									<input type="password" class="form-input form-wide" id="register-password"
-										required />
-
-									<div class="form-footer mb-2">
-										<button type="submit" class="btn btn-dark btn-md w-100 mr-0">
-											Register
-										</button>
-									</div>
-								</form>
-							</div>
+							
 						</div>
 					</div>
 				</div>
