@@ -2,7 +2,10 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\authlogin;
-use App\Http\Controllers\{admins,CategoryController,SubcategoryController,SupplierController,QuantityController,ColorController,ProductController,users};
+use App\Http\Middleware\userauth;
+use App\Http\Middleware\emailVerified;
+use App\Http\Middleware\emailNotVerified;
+use App\Http\Controllers\{admins,CategoryController,SubcategoryController,SupplierController,QuantityController,ColorController,ProductController,users,userController};
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -19,15 +22,15 @@ Route::controller(admins::class)->group(function(){
     Route::get("login", "login");
     Route::post("admin", "admin");
 });
-// ================================admin controller route===============================
+
 
 Route::group(["middleware" => ['authlogin']], function () {
-// ================================admin controller route===============================
+
 
     Route::controller(admins::class)->group(function(){
         Route::get("logout","logout");
     });
-// ================================admin controller route===============================
+
 // ================================recources controller route===============================
 Route::resources([
     "/category"=>CategoryController::class,
@@ -38,28 +41,46 @@ Route::resources([
     "/product"=>ProductController::class,
 ]);
 // ================================recources controller route===============================
+// ================================admin controller route===============================
+
 Route::delete("remove/{id}",[ProductController::class,"remove"]);
 });
 
-// ================================admin controller route===============================
+// ================================user controller route===============================
 
 Route::controller(users::class)->group(function(){
     Route::get("/", "user");
     Route::get("about", "about");
     Route::get("blog", "blog");
-    Route::get("cart", "cart");
     Route::get("cat", "cat");
-    Route::get("checkout", "checkout");
     Route::get("contact", "contact");
-    Route::get("dashboard", "dashboard");
     Route::get("forgot", "forgot");
-    Route::get("userLogin", "login");
+    Route::get("userLogin", "userLogin");
     Route::get("frontProduct/{id}", "frontProduct");
-    Route::get("shop", "shop");
     Route::get("single", "single");
     Route::get("subcat", "subcat");
-    Route::get("wishlist", "wishlist");
     Route::post("change", "change");
-    Route::post("addcart", "addcart");
+    Route::post("user", "login");
+    Route::get("register", "registerView");
+    Route::post("register", "register");
 });
-// ================================admin controller route===============================
+
+Route::group(["middleware" => ['userauth','emailNotVerified']], function () {
+Route::get('must-verify', [Users::class, 'verifyEmail']);
+Route::get('sendMail', [Users::class, 'sendMail']);
+Route::get('verified', [Users::class, 'verified']);
+Route::get('resend', [Users::class, 'resend']);
+});
+
+Route::group(["middleware" => ['userauth','emailVerified']], function () {
+    Route::controller(users::class)->group(function(){
+    Route::get("cart", "cart");
+    Route::get("checkout", "checkout");
+    Route::get("dashboard", "dashboard");
+    Route::get("shop", "shop");
+    Route::get("wishlist", "wishlist");
+    Route::post("addcart", "addcart");
+    Route::get("userLogout","userLogout");
+    });
+});
+// ================================user controller route===============================

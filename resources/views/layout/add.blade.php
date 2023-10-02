@@ -65,7 +65,12 @@
                                     <li><a href="{{url('blog')}}">Blog</a></li>
                                     <li><a href="{{url('wishlist')}}">My Wishlist</a></li>
                                     <li><a href="{{url('cart')}}">Cart</a></li>
-                                    <li><a href="{{url('login')}}">Log In</a></li>
+                                    @if (!session()->has("useremail"))
+                                    <li><a href="{{url('userLogin')}}">Log In</a></li>
+                                    <li><a href="{{url('register')}}">Register</a></li>
+                                    @else
+                                    <li><a href="{{url('userLogout')}}">Logout</a></li>
+                                    @endif
                                 </ul>
                             </div>
                             <!-- End .header-menu -->
