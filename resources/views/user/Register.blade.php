@@ -65,6 +65,117 @@
                             @enderror
                                     </div>
                                     </div>
+
+									<div class="row">
+                                        <div class="col-6">
+									<label for="number">
+										Phone Number
+										<span class="required">*</span>
+									</label>
+									<input type="number" name="number" class="form-input form-wide" id="number" required />
+                                    @error('number')
+                            <div class="alert alert-danger" role="alert">
+                                    <strong>{{$message}}</strong>
+                            </div>
+                            @enderror
+                                        </div>
+
+                                        <div class="col-6">
+                                            <label for="countryId">
+                                                Country
+                                                <span class="required">*</span>
+                                            </label>
+											<select name="country" class="form-input form-wide countries" id="countryId" required>
+                                            <option value="">Select Country</option>
+                                            <option value="pk">Pakistan</option>
+                                            <option value="in">india</option>
+											</select>
+                                            @error('country')
+                            <div class="alert alert-danger" role="alert">
+                                    <strong>{{$message}}</strong>
+                            </div>
+                            @enderror
+                                    </div>
+                                    </div>
+
+									<div class="row">
+                                        <div class="col-6">
+                                            <label for="stateId">
+                                                State
+                                                <span class="required">*</span>
+                                            </label>
+											<select name="state" class="form-input form-wide states" id="stateId" required>
+												<option value="">Select State</option>
+												<option value="pb">punjab</option>
+												<option value="sn">sindh</option>
+											</select>
+                                            @error('state')
+                            <div class="alert alert-danger" role="alert">
+                                    <strong>{{$message}}</strong>
+                            </div>
+                            @enderror
+                                    </div>
+
+                                        <div class="col-6">
+                                            <label for="cityId">
+                                                City
+                                                <span class="required">*</span>
+                                            </label>
+											<select name="city" class="form-input form-wide cities" id="cityId" required>
+												<option value="">Select City</option>
+												<option value="fsd">faisalabad</option>
+												<option value="lr">lahore</option>
+											</select>
+                                            @error('city')
+                            <div class="alert alert-danger" role="alert">
+                                    <strong>{{$message}}</strong>
+                            </div>
+                            @enderror
+                                    </div>
+                                    </div>
+
+									<div class="row">
+                                        <div class="col-6">
+									<label for="address1">
+										Address Line 1
+										<span class="required">*</span>
+									</label>
+									<input type="text" name="address1" class="form-input form-wide" id="address1" required />
+                                    @error('address1')
+                            <div class="alert alert-danger" role="alert">
+                                    <strong>{{$message}}</strong>
+                            </div>
+                            @enderror
+                                        </div>
+
+                                        <div class="col-6">
+                                            <label for="address2">
+                                                Address Line 2
+                                                <span class="required">*</span>
+                                            </label>
+                                            <input type="text" name="address2" class="form-input form-wide" id="address2" required />
+                                            @error('address2')
+                            <div class="alert alert-danger" role="alert">
+                                    <strong>{{$message}}</strong>
+                            </div>
+                            @enderror
+                                    </div>
+                                    </div>
+
+									<div class="row">
+                                        <div class="col-6">
+									<label for="code">
+										Postal Code
+										<span class="required">*</span>
+									</label>
+									<input type="number" name="code" class="form-input form-wide" id="code" required />
+                                    @error('code')
+                            <div class="alert alert-danger" role="alert">
+                                    <strong>{{$message}}</strong>
+                            </div>
+                            @enderror
+                                        </div>
+                                    </div>
                                     
                                     <div class="row">
                                         <div class="col-6">

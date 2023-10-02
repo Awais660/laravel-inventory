@@ -137,15 +137,37 @@ class users extends Controller
         $req->validate([
             "name"=>'required',
             "email"=>'required|string|email|unique:users,email|max:255',
+            "number"=>'required|numeric',
+            "country"=>'required',
+            "state"=>'required',
+            "city"=>'required',
+            "address1"=>'required',
+            "address2"=>'required',
+            "code"=>'required|numeric',
             "password"=>'required|string|confirmed',
             "password_confirmation"=>'required|string',
         ]);
         $name = $req->name;
         $email = $req->email;
+        $number = $req->number;
+        $country = $req->country;
+        $state = $req->state;
+        $city = $req->city;
+        $address1 = $req->address1;
+        $address2 = $req->address2;
+        $code = $req->code;
         $password = Hash::make($req->password);
+        
         $user = new user;
         $user->name = $name;
         $user->email = $email;
+        $user->number = $number;
+        $user->country = $country;
+        $user->state = $state;
+        $user->city = $city;
+        $user->address1 = $address1;
+        $user->address2 = $address2;
+        $user->code = $code;
         $user->password = $password;
         $save=$user->save();
         if ($save) {
