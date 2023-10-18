@@ -24,35 +24,46 @@
 			<div class="container reset-password-container">
 				<div class="row">
 					<div class="col-lg-6 offset-lg-3">
-						@if (session("errormsg")!="")
+                        @if (session("errormsg")!="")
                             <div class="alert alert-danger" role="alert">
                                     <strong>{{session("errormsg") }}</strong>
                             </div>
                             @endif
 						<div class="feature-box border-top-primary">
 							<div class="feature-box-content">
-								<form class="mb-0" action="{{url('/reset')}}" method="POST">
+								<form class="mb-0" action="{{url('/passwordSubmit')}}" method="POST">
 									@csrf
 									<p>
-										Lost your password? Please enter your
-										username or email address. You will receive
-										a link to create a new password via email.
+										Lost your password? Please enter your new password.
 									</p>
+                                    <input type="hidden" value="{{$model}}" name="model" required />
+									<input type="hidden" value="{{$id}}" name="id" required />
 									<div class="form-group mb-0">
-										<label for="reset-email" class="font-weight-normal">email</label>
-										<input type="email" class="form-control" id="reset-email" name="email" required />
-										@error('email')
+										<label for="password" class="font-weight-normal">Password</label>
+										<input type="password" class="form-control" id="password" name="password" required />
+                                        @error('passeord')
                             <div class="alert alert-danger" role="alert">
                                     <strong>{{$message}}</strong>
 									</div>
 									@enderror
+									</div>
+
+                                    <div class="form-group mb-0">
+										<label for="confirmPassword" class="font-weight-normal">Confirm Password</label>
+										<input type="password" class="form-control" id="confirmPassword" name="password_confirmation" required />
+                                        @error('password_confirmation')
+                            <div class="alert alert-danger" role="alert">
+                                    <strong>{{$message}}</strong>
+									</div>
+									@enderror
+									</div>
 
 									<div class="form-footer mb-0">
 										<a href="{{url('login')}}">Click here to login</a>
 
 										<button type="submit"
 											class="btn btn-md btn-primary form-footer-right font-weight-normal text-transform-none mr-0">
-											Reset Password
+											Submit
 										</button>
 									</div>
 								</form>

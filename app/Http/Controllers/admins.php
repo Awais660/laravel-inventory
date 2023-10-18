@@ -11,7 +11,7 @@ class admins extends Controller
     function logout()
     {
             session()->pull("adminemail");
-            return redirect("userLogin");
+            return redirect("Login");
     }
     
 }

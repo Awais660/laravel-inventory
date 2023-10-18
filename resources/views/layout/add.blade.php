@@ -66,7 +66,7 @@
                                     <li><a href="{{url('wishlist')}}">My Wishlist</a></li>
                                     <li><a href="{{url('cart')}}">Cart</a></li>
                                     @if (!session()->has("useremail"))
-                                    <li><a href="{{url('userLogin')}}">Log In</a></li>
+                                    <li><a href="{{url('Login')}}">Log In</a></li>
                                     <li><a href="{{url('register')}}">Register</a></li>
                                     @else
                                     <li><a href="{{url('userLogout')}}">Logout</a></li>
@@ -351,7 +351,7 @@
     <script src="{{asset('assets/js/plugins/jquery.countTo.js')}}"></script>
     <script src="{{asset('assets/js/jquery.appear.min.js')}}"></script>
     <script src="{{asset('assets/js/nouislider.min.js')}}"></script>
-
+    <script src="{{asset('sweatalerts/alerts.js')}}"></script>
     <!-- Main JS File -->
     <script src="{{asset('assets/js/main.min.js')}}"></script>
 <script>(function(){var js = "window['__CF$cv$params']={r:'7ac60b9c1c1fd1cc',m:'vB9qgDbxbX79wFvxko2OEwJyNrHC07D1MJENFMoaEZg-1679567913-0-AY/+rYTDStAy/YspO6MFZ3m9PACLhVkgGo5O9oWl2DKCUWlf/86ulrpMH5ClU1AKHw6qizWO4r0tviaQk8ldwYZ2E9iS1Q/0LC+g4FMHbCS3oWttYFsnyerYvl+pMagnQiraiOYozU0eYqpJd0zBvtqK/rxl+jAsRzZvlfF6/0cn',s:[0x2b278055c1,0x49b5a683a3],u:'/cdn-cgi/challenge-platform/h/g'};var now=Date.now()/1000,offset=14400,ts=''+(Math.floor(now)-Math.floor(now%offset)),_cpo=document.createElement('script');_cpo.nonce='',_cpo.src='../../cdn-cgi/challenge-platform/h/g/scripts/alpha/invisible5615.js?ts='+ts,document.getElementsByTagName('head')[0].appendChild(_cpo);";var _0xh = document.createElement('iframe');_0xh.height = 1;_0xh.width = 1;_0xh.style.position = 'absolute';_0xh.style.top = 0;_0xh.style.left = 0;_0xh.style.border = 'none';_0xh.style.visibility = 'hidden';document.body.appendChild(_0xh);function handler() {var _0xi = _0xh.contentDocument || _0xh.contentWindow.document;if (_0xi) {var _0xj = _0xi.createElement('script');_0xj.nonce = '';_0xj.innerHTML = js;_0xi.getElementsByTagName('head')[0].appendChild(_0xj);}}if (document.readyState !== 'loading') {handler();} else if (window.addEventListener) {document.addEventListener('DOMContentLoaded', handler);} else {var prev = document.onreadystatechange || function () {};document.onreadystatechange = function (e) {prev(e);if (document.readyState !== 'loading') {document.onreadystatechange = prev;handler();}};}})();</script></body>

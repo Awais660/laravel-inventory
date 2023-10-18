@@ -4,10 +4,10 @@ namespace App\Http\Controllers;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-
+use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
-use App\Models\{Category,product,user,admin};
+use App\Models\{Category,product,product_attr,user,admin,add_cart,feedback};
 
 class users extends Controller
 {
@@ -73,6 +73,9 @@ class users extends Controller
 
     public function frontProduct($id)
     {
+        
+        $feedback = Feedback::with('comments')->where('post_id', $id)->paginate(10);
+        
         $pro = product::where("pid",$id)->first();
         $size = DB::table('products')->join('product_attrs', 'product_attrs.ap_id', '=', 'products.pid')->select('product_attrs.size')->distinct()->where('products.pid', $id)->get();
         
@@ -80,7 +83,7 @@ class users extends Controller
         
 
         $cat = Category::all();
-            return view('user.product-variable',["cat"=>$cat , "pro"=>$pro, "size"=>$size, "color"=>$color]);
+            return view('user.product-variable',["cat"=>$cat , "pro"=>$pro, "size"=>$size, "color"=>$color, "feedback"=>$feedback]);
     }
     public function shop()
     {
@@ -123,7 +126,45 @@ class users extends Controller
      
     public function addcart(request $req)
     {
-        
+        $email=session()->get("useremail");
+        $exist = add_cart::where("pcode",$req->input('pcode'))->get();
+        if($exist){
+            return response()->json([
+                'msg' => 3,
+            ]);
+        }else{
+        if($req->input('pqty') < $req->input('pstock')){
+        $tunit=$req->input('punit') * $req->input('pqty');
+        $tsrp=$req->input('psrp') * $req->input('pqty');
+        $add = new add_cart;
+        $add->pname = $req->input('pname');
+        $add->pdes = $req->input('pdes');
+        $add->pqty = $req->input('pqty');
+        $add->pcode = $req->input('pcode');
+        $add->unit = $req->input('punit');
+        $add->srp = $req->input('psrp');
+        $add->tunit = $tunit;
+        $add->tsrp = $tsrp;
+        $add->size = $req->input('psize');
+        $add->color = $req->input('pcolor');
+        $add->image = $req->input('pimage');
+        $add->email = $email;
+        $save=$add->save();
+        if ($save) {
+            return response()->json([
+                'msg' => 1,
+            ]);
+        }else {
+            return response()->json([
+                'msg' => 2,
+            ]);
+        }
+    }else{
+        return response()->json([
+            'msg' => 5,
+        ]);
+    }
+}
     }
 
     public function registerView(request $req)
@@ -190,19 +231,38 @@ class users extends Controller
     $admin = Admin::where('email', $email)->first();
 
     if ($user && Hash::check($req->password, $user->password)) {
+        // if(isset($req->remember)&&!empty($req->remember)){
+        //     Cookie::make('email', $email, 120); 
+        //     Cookie::make('password', $req->password, 120);
+        // }else{
+        //     Cookie::queue(Cookie::forget('email'));
+        //     Cookie::queue(Cookie::forget('password'));
+        // }
         session()->put("useremail", $email);
         return redirect("shop");
     } elseif ($admin && Hash::check($req->password, $admin->password)) {
+        // if(isset($req->remember)&&!empty($req->remember)){
+        //     Cookie::make('email', $email, 120); 
+        //     Cookie::make('password', $req->password, 120);
+        // }else{
+        //     Cookie::queue(Cookie::forget('email'));
+        //     Cookie::queue(Cookie::forget('password'));
+        // }
         session()->put("adminemail", $email);
-        return view('admin.index');
+        return redirect("admin");
     } else {
-        return redirect("userLogin")->with("errormsg", "Email or password is incorrect");
+        return redirect("login")->with("errormsg", "Email or password is incorrect");
     }
 }
+
+function admin()
+    {
+        return view('admin.index');
+    }
     function userLogout()
     {
             session()->pull("useremail");
-            return redirect("userLogin");
+            return redirect("Login");
     }
 
     public function verifyEmail()
@@ -242,6 +302,126 @@ class users extends Controller
     {
         $cat = Category::all();
         return view('user.resend', compact("cat"));
+    }
+
+    public function reset(request $req)
+    {
+        $req->validate([
+            "email" => 'required|string|email|max:255',
+        ]);
+    
+        $email = $req->email;
+        $user = User::where('email', $email)->first();
+        $admin = Admin::where('email', $email)->first();
+        $randomNumber = rand(1000, 9999);
+        $emailSubject = 'Code: ' . $randomNumber;
+
+        // Get the current time
+    $currentTime = Carbon::now();
+    // Add 10 minutes to the current time
+    $newTime = $currentTime->addMinutes(10);
+    
+        if ($user) {
+            Mail::html('<p>Your verification code is: <strong>' . $randomNumber . '</strong></p>', function($message) use ($email, $emailSubject) {
+                $message->to($email);
+                $message->subject($emailSubject);
+        });
+
+        User::where('email', $email)->update([
+            'reset_code' => $randomNumber,
+            'exp_date' => $newTime,
+        ]);
+            return redirect("code");
+        }elseif($admin){
+            Mail::html('<p>Your verification code is: <strong>' . $randomNumber . '</strong></p>', function($message) use ($email, $emailSubject) {
+                $message->to($email);
+                $message->subject($emailSubject);
+            });
+    
+            admin::where('email', $email)->update([
+                'code' => $randomNumber,
+                'exp_date' => $newTime,
+            ]);
+            return redirect("code");
+        } else {
+            return redirect("forgot")->with("errormsg", "Email is incorrect");
+        }
+    }
+
+    public function code()
+    {
+        $cat = Category::all();
+        return view('user.code', compact("cat"));
+    }
+
+    public function codeSubmit(request $req)
+    {
+        $req->validate([
+            "code" => 'required|numeric',
+        ]);
+    
+        $code = $req->code;
+        $user = User::where('reset_code', $code)->first();
+        $admin = Admin::where('code', $code)->first();
+        
+    
+        if ($user) {
+           $id=$user->id;
+           return redirect("userResetPassword?id=$id");
+        }elseif($admin){
+            $id=$admin->id;
+            return redirect("adminResetPassword?id=$id");
+        } else {
+            return redirect("code")->with("errormsg", "Code is incorrect");
+        }
+    }
+
+    public function userResetPassword()
+    {
+        $id = request('id');
+        $model="user";
+        $cat = Category::all();
+        return view('user.userResetPassword', compact('cat', 'model','id'));
+    }
+
+    public function adminResetPassword()
+    {
+        $id = request('id');
+        $model="admin";
+        $cat = Category::all();
+        return view('user.adminResetPassword', compact('cat', 'model','id'));
+    }
+
+
+    public function passwordSubmit(request $req)
+    {
+        $req->validate([
+            "password"=>'required|string|confirmed',
+            "password_confirmation"=>'required|string',
+        ]);
+    
+        $password = Hash::make($req->password);
+        $model = $req->model;
+        $id = $req->id;
+    
+        if ($model=="user") {
+            User::where('id', $id)->update([
+                'password' => $password,
+                'reset_code' => "",
+                'exp_date' => "",
+            ]);
+            return redirect("userLogin")->with("msg", "Your password is reset");
+        }elseif($model=="admin"){
+            admin::where('id', $id)->update([
+                'password' => $password,
+                'code' => "",
+                'exp_date' => "",
+            ]);
+            return redirect("userLogin")->with("msg", "Your password is reset");
+        
+        } else {
+            return redirect("code")->with("errormsg", "Can't reset password");
+        }
     }
 
 }

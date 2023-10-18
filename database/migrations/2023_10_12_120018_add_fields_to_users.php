@@ -14,13 +14,8 @@ return new class extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('number')->after('email_verified_at');
-            $table->string('country')->after('number');
-            $table->string('state')->after('country');
-            $table->string('city')->after('state');
-            $table->string('address1')->after('city');
-            $table->string('address2')->after('address1');
-            $table->string('code')->after('address2');
+            $table->string('reset_code')->nullable();
+            $table->string('exp_date')->nullable();
         });
     }
 

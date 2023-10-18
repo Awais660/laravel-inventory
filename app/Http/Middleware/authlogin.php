@@ -20,7 +20,7 @@ class authlogin
         if (session()->has("adminemail")) {
             return $next($request);
         } else {
-            return redirect("userLogin");
+            return redirect("Login");
         }
 
         

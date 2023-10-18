@@ -1,11 +1,11 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Middleware\authlogin;
 use App\Http\Middleware\userauth;
+use App\Http\Middleware\authlogin;
+use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\emailVerified;
 use App\Http\Middleware\emailNotVerified;
-use App\Http\Controllers\{admins,CategoryController,SubcategoryController,SupplierController,QuantityController,ColorController,ProductController,users,userController};
+use App\Http\Controllers\{admins,CategoryController,SubcategoryController,SupplierController,QuantityController,ColorController,ProductController,users,userController,feedbacks,comments};
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -17,11 +17,6 @@ use App\Http\Controllers\{admins,CategoryController,SubcategoryController,Suppli
 |
 */
 // ================================admin controller route===============================
-
-Route::controller(admins::class)->group(function(){
-    Route::get("login", "login");
-    Route::post("admin", "admin");
-});
 
 
 Route::group(["middleware" => ['authlogin']], function () {
@@ -54,15 +49,22 @@ Route::controller(users::class)->group(function(){
     Route::get("blog", "blog");
     Route::get("cat", "cat");
     Route::get("contact", "contact");
-    Route::get("forgot", "forgot");
-    Route::get("userLogin", "userLogin");
+    Route::get("Login", "userLogin");
     Route::get("frontProduct/{id}", "frontProduct");
     Route::get("single", "single");
     Route::get("subcat", "subcat");
     Route::post("change", "change");
     Route::post("user", "login");
+    Route::get("admin", "admin");
     Route::get("register", "registerView");
     Route::post("register", "register");
+    Route::get('forgot', 'forgot');
+    Route::post('reset', 'reset');
+    Route::get('code', 'code');
+    Route::post('codeSubmit', 'codeSubmit');
+    Route::get('userResetPassword', 'userResetPassword');
+    Route::get('adminResetPassword', 'adminResetPassword');
+    Route::post('passwordSubmit', 'passwordSubmit');
 });
 
 Route::group(["middleware" => ['userauth','emailNotVerified']], function () {
@@ -70,9 +72,17 @@ Route::get('must-verify', [Users::class, 'verifyEmail']);
 Route::get('sendMail', [Users::class, 'sendMail']);
 Route::get('verified', [Users::class, 'verified']);
 Route::get('resend', [Users::class, 'resend']);
+
 });
 
 Route::group(["middleware" => ['userauth','emailVerified']], function () {
+
+    Route::post('feedback', [feedbacks::class, 'store']);
+    Route::post('showfeedback', [feedbacks::class, 'showfeedback']);
+    Route::post('deleteComment', [feedbacks::class, 'delete']);
+
+    Route::post('comment', [comments::class, 'store']);
+
     Route::controller(users::class)->group(function(){
     Route::get("cart", "cart");
     Route::get("checkout", "checkout");

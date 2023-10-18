@@ -31,28 +31,27 @@
                             @endif
 						<div class="feature-box border-top-primary">
 							<div class="feature-box-content">
-								<form class="mb-0" action="{{url('/reset')}}" method="POST">
+								<form class="mb-0" action="{{url('/codeSubmit')}}" method="POST">
 									@csrf
 									<p>
-										Lost your password? Please enter your
-										username or email address. You will receive
-										a link to create a new password via email.
+										Lost your password? Please enter code that we email you.
 									</p>
 									<div class="form-group mb-0">
-										<label for="reset-email" class="font-weight-normal">email</label>
-										<input type="email" class="form-control" id="reset-email" name="email" required />
-										@error('email')
+										<label for="code" class="font-weight-normal">Code</label>
+										<input type="text" class="form-control" id="code" name="code" required />
+										@error('code')
                             <div class="alert alert-danger" role="alert">
                                     <strong>{{$message}}</strong>
 									</div>
 									@enderror
+									</div>
 
 									<div class="form-footer mb-0">
 										<a href="{{url('login')}}">Click here to login</a>
 
 										<button type="submit"
 											class="btn btn-md btn-primary form-footer-right font-weight-normal text-transform-none mr-0">
-											Reset Password
+											Submit
 										</button>
 									</div>
 								</form>

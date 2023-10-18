@@ -85,7 +85,7 @@
                                                 Country
                                                 <span class="required">*</span>
                                             </label>
-											<select name="country" class="form-input form-wide countries" id="countryId" required>
+											<select name="country" class="form-control form-control-sm countries" id="countryId" required>
                                             <option value="">Select Country</option>
                                             <option value="pk">Pakistan</option>
                                             <option value="in">india</option>
@@ -104,7 +104,7 @@
                                                 State
                                                 <span class="required">*</span>
                                             </label>
-											<select name="state" class="form-input form-wide states" id="stateId" required>
+											<select name="state" class="form-control form-control-sm states" id="stateId" required>
 												<option value="">Select State</option>
 												<option value="pb">punjab</option>
 												<option value="sn">sindh</option>
@@ -121,7 +121,7 @@
                                                 City
                                                 <span class="required">*</span>
                                             </label>
-											<select name="city" class="form-input form-wide cities" id="cityId" required>
+											<select name="city" class="form-control form-control-sm cities" id="cityId" required>
 												<option value="">Select City</option>
 												<option value="fsd">faisalabad</option>
 												<option value="lr">lahore</option>

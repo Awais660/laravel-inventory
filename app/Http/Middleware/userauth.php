@@ -19,7 +19,7 @@ class userauth
         if (session()->has("useremail")) {
             return $next($request);
         } else {
-            return redirect("userLogin");
+            return redirect("Login");
         }
     }
 }

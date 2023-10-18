@@ -28,6 +28,12 @@
 							<div class="col-md-3">
 							</div>
 							<div class="col-md-6">
+								@if (session("msg")!="")
+                            <div class="alert alert-success" role="alert">
+                                    <strong>{{session("msg") }}</strong>
+                            </div>
+                            @endif
+
 								@if (session("errormsg")!="")
                             <div class="alert alert-danger" role="alert">
                                     <strong>{{session("errormsg") }}</strong>
@@ -43,7 +49,7 @@
 										Username or email address
 										<span class="required">*</span>
 									</label>
-									<input type="email" name="email" class="form-input form-wide" id="login-email" required />
+									<input type="email" name="email"  class="form-input form-wide" id="login-email" required />
 									@error('email')
                             <div class="alert alert-danger" role="alert">
                                     <strong>{{$message}}</strong>
@@ -63,7 +69,7 @@
 
 									<div class="form-footer">
 										<div class="custom-control custom-checkbox mb-0">
-											<input type="checkbox" class="custom-control-input" id="lost-password" />
+											<input type="checkbox" name="remember" class="custom-control-input" id="lost-password" />
 											<label class="custom-control-label mb-0" for="lost-password">Remember
 												me</label>
 										</div>
