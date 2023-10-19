@@ -21,6 +21,8 @@ return new class extends Migration
             $table->string('address1')->after('city');
             $table->string('address2')->after('address1');
             $table->string('code')->after('address2');
+            $table->string('feedback')->default('1')->after('code');
+            $table->string('comment')->default('1')->after('feedback');
         });
     }
 

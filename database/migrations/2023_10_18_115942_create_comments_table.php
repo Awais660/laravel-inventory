@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string("post_id")->nullable();
             $table->string("feedback_id")->nullable();
             $table->string("comment")->nullable();
+            $table->string("rating")->nullable();
             $table->timestamps();
         });
     }

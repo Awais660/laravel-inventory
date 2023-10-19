@@ -5,7 +5,7 @@ use App\Http\Middleware\authlogin;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\emailVerified;
 use App\Http\Middleware\emailNotVerified;
-use App\Http\Controllers\{admins,CategoryController,SubcategoryController,SupplierController,QuantityController,ColorController,ProductController,users,userController,feedbacks,comments};
+use App\Http\Controllers\{admins,CategoryController,SubcategoryController,SupplierController,QuantityController,ColorController,ProductController,users,userController,feedbacks,comments,dashboardUser};
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -39,6 +39,11 @@ Route::resources([
 // ================================admin controller route===============================
 
 Route::delete("remove/{id}",[ProductController::class,"remove"]);
+
+Route::get('dashboardUser', [dashboardUser::class, 'dashboardUser']);
+Route::delete('/dashboardUser/{id}', [dashboardUser::class, 'userDelete']);
+Route::get('permission/{id}', [dashboardUser::class, 'editUser']);
+Route::get('permission', [dashboardUser::class, 'permission']);
 });
 
 // ================================user controller route===============================

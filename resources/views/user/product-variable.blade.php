@@ -448,8 +448,11 @@
 
 
                         <div class="add-product-review">
+                            @if ($permission->feedback=="1")
                             <h3 class="review-title">Add a review</h3>
-
+                            
+                                
+                            
                             <form action="#" class="comment-form m-0" id="data">
 
                                 <div class="rating-form">
@@ -510,13 +513,15 @@
 
                                 <input type="submit" class="btn btn-primary" id="sub" value="Submit">
                             </form>
+                            
                             <div class="divider"></div>
-
+                            @endif
                             <h3 class="reviews-title">1 review for Men Black Sports Shoes</h3>
                             <div id="postFeedback">
                                 @include('user.feedback', [
                                     'feedbacks' => $feedback,
                                     'post_id' => $pro->pid,
+                                    'permissions' => $permission,
                                 ])
                             </div>
                         </div>

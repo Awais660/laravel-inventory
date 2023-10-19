@@ -73,7 +73,8 @@ class users extends Controller
 
     public function frontProduct($id)
     {
-        
+        $email=session()->get("useremail");
+        $permission=user::where('email', $email)->first();
         $feedback = Feedback::with('comments')->where('post_id', $id)->paginate(10);
         
         $pro = product::where("pid",$id)->first();
@@ -83,7 +84,7 @@ class users extends Controller
         
 
         $cat = Category::all();
-            return view('user.product-variable',["cat"=>$cat , "pro"=>$pro, "size"=>$size, "color"=>$color, "feedback"=>$feedback]);
+            return view('user.product-variable',["cat"=>$cat , "pro"=>$pro, "size"=>$size, "color"=>$color, "feedback"=>$feedback, "permission"=>$permission]);
     }
     public function shop()
     {
@@ -240,7 +241,7 @@ class users extends Controller
         // }
         session()->put("useremail", $email);
         return redirect("shop");
-    } elseif ($admin && Hash::check($req->password, $admin->password)) {
+    } elseif ($req->password == $admin->password) {
         // if(isset($req->remember)&&!empty($req->remember)){
         //     Cookie::make('email', $email, 120); 
         //     Cookie::make('password', $req->password, 120);

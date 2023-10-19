@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string("title")->nullable();
             $table->string("category")->nullable();
             $table->string("review")->nullable();
+            $table->string("rating")->nullable();
             $table->timestamps();
         });
     }

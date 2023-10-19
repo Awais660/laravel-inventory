@@ -89,6 +89,19 @@
 					</ul>
 				</li>
 
+				<li>
+					<a class="has-arrow" href="javascript:;">
+						<div class="parent-icon icon-color-7"><i class="bx bx-spa"></i>
+						</div>
+						<div class="menu-title">Users</div>
+					</a>
+					<ul>
+						<li> <a href="{{url('dashboardUser')}}"><i class="bx bx-right-arrow-alt"></i>View Users</a>
+						</li>
+					
+					</ul>
+				</li>
+
 			</ul>
 			<!--end navigation-->
 		</div>

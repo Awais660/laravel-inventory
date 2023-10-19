@@ -25,6 +25,7 @@ class feedbacks extends Controller
         $feed->title = $request->input('title');
         $feed->category = $request->input('category');
         $feed->review = $request->input('review');
+        $feed->rating = $request->input('rating');
         $save=$feed->save();
 
         return response()->json([
