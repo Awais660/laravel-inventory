@@ -24,7 +24,6 @@ class comments extends Controller
         $comment->feedback_id = $request->input('feed');
         $comment->post_id = $request->input('post');
         $comment->comment = $request->input('comment');
-        $comment->rating = $request->input('rating');
         $save=$comment->save();
 
         return response()->json([

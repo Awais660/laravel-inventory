@@ -46,7 +46,7 @@
                         <div class="float-sm-right">
                             <button class="btn btn-danger btn-sm delete del" data-type="feedback"
                                 data-del="{{ $feedback->id }}" id="delete"
-                                onclick="deleteFeedback({{ $feedback->id }})">delete</button>
+                                onclick="deleteFeedback({{ $feedback->id }})">Delete</button>
                         </div>
                     @endif
 
