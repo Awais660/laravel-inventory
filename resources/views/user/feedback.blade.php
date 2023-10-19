@@ -32,7 +32,7 @@
                                         @endphp
                                         @if ($feedback->user->email==$email)
                                         <div class="float-sm-right">
-                                            <button class="btn btn-danger btn-sm delete del" data-type="feedback" data-del="{{$feedback->id}}"  id="delete">delete</button>
+                                            <button class="btn btn-danger btn-sm delete del" data-type="feedback" data-del="{{$feedback->id}}"  id="delete" onclick="deleteFeedback({{ $feedback->id }})">delete</button>
                                         </div>
                                         @endif
                                        
@@ -42,13 +42,13 @@
                             </div>
 
                             <div class="reply-section">
-                                <button class="btn btn-primary btn-sm reply-btn">Reply</button>
+                                <button class="btn btn-primary btn-sm reply-btn" onclick="toggleReplyForm(this)">Reply</button>
                                 <div class="reply-form mt-2" style="display: none;">
                                     <form action="#" class="reply-form2" id="commentForm">
                                         <input type="hidden" name="post" id="post" value="{{ $post_id}}">
                                         <input type="hidden" name="feed" id="feed" value="{{ $feedback->id}}">
                                     <input type="text" name="comment" id="comment" class="form-control" placeholder="Your reply...">
-                                    <button class="btn btn-success btn-sm reply-submit-btn reply">Submit Reply</button>
+                                    <button class="btn btn-success btn-sm reply-submit-btn reply" onclick="submitReply(event, '{{ url('comment') }}', '{{ csrf_token() }}')">Submit Reply</button>
                                     </form>
                                 </div>
                             </div>

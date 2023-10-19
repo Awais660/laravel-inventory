@@ -25,7 +25,7 @@
                                         @endphp
                                         @if ($feedback->user->email==$email)
                 <div class="float-sm-right">
-                    <button class="btn btn-danger btn-sm delete del" data-type="comment" data-del="{{$comment->id}}" id="delete">delete</button>
+                    <button class="btn btn-danger btn-sm delete del" data-type="comment" data-del="{{$comment->id}}" id="delete" onclick="deleteFeedback({{ $feedback->id }})">delete</button>
                 </div>
                 @endif
             </div>

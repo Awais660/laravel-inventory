@@ -600,12 +600,10 @@
 <script src="https://code.jquery.com/jquery-3.7.0.min.js"
     integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
 <script>
-    $(document).ready(function() {
-        $('.reply-btn').click(function() {
-            // Find the closest reply form and toggle its visibility
-            $(this).closest('.comment-list').find('.reply-form').toggle();
-        });
-    });
+    function toggleReplyForm(button) {
+        // Find the closest reply form and toggle its visibility
+        $(button).closest('.comment-list').find('.reply-form').toggle();
+    }
 
     function markSelected(element, index) {
 
@@ -842,7 +840,77 @@
             });
         });
 
-        function getData() {
+    });
+
+
+    function deleteFeedback(delId) {
+        var type = 'feedback';
+        var msg = this;
+
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: "{{ url('deleteComment') }}",
+                    type: "POST",
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    data: {
+                        id: delId,
+                        type: type
+                    },
+                    success: function(res) {
+                        if (res.msg == 1) {
+                            Swal.fire({
+                                toast: true,
+                                icon: 'success',
+                                title: 'Deleted',
+                                animation: false,
+                                position: 'top-right',
+                                showConfirmButton: false,
+                                timer: 3000,
+                                timeProgressBar: true,
+                                didOpen: (toast) => {
+                                    toast.addEventListener(
+                                        'mouseenter', Swal.stopTimer)
+                                    toast.addEventListener(
+                                        'mouseenter', Swal.resumeTimer)
+                                }
+                            });
+                            location.reload(true);
+                        } else if (res.msg == 2) {
+                            Swal.fire({
+                                toast: true,
+                                icon: 'error',
+                                title: 'Not Deleted',
+                                animation: false,
+                                position: 'top-right',
+                                showConfirmButton: false,
+                                timer: 3000,
+                                timeProgressBar: true,
+                                didOpen: (toast) => {
+                                    toast.addEventListener(
+                                        'mouseenter', Swal.stopTimer)
+                                    toast.addEventListener(
+                                        'mouseenter', Swal.resumeTimer)
+                                }
+                            })
+                        }
+                    }
+                })
+            }
+        });
+    }
+
+    function getData() {
             $.ajax({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
@@ -860,153 +928,61 @@
 
         }
 
+    function submitReply(event, url, csrfToken) {
+        event.preventDefault();
+        var form = event.target.closest('.reply-form2'); // Find the closest form to the clicked button
+        var formdata = new FormData(form); // Get form data
+        $.ajax({
+            url: url,
+            method: "POST",
+            contentType: false,
+            processData: false,
+            data: formdata,
+            headers: {
+                'X-CSRF-TOKEN': csrfToken
+            },
+            success: function(res) {
+                if (res.status == 1) {
+                    getData();
+                    form.reset();
 
-        $(".reply").on("click", function(g) {
-            g.preventDefault();
-            var form = $(this).closest('.reply-form2'); // Find the closest form to the clicked button
-            var formdata = new FormData(form[0]); // Get form data
-            $.ajax({
-                url: "{{ url('comment') }}",
-                method: "POST",
-                contentType: false,
-                processData: false,
-                data: formdata,
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                success: function(res) {
-
-                    if (res.status == 1) {
-                        getData();
-                        $('form').trigger("reset");
-
-                        Swal.fire({
-                            toast: true,
-                            icon: 'success',
-                            title: 'Submit',
-                            animation: false,
-                            position: 'top-right',
-                            showConfirmButton: false,
-                            timer: 3000,
-                            timeProgressBar: true,
-                            didOpen: (toast) => {
-                                toast.addEventListener('mouseenter', Swal
-                                    .stopTimer)
-                                toast.addEventListener('mouseenter', Swal
-                                    .resumeTimer)
-                            }
-
-                        })
-                    } else if (res.status == 2) {
-                        Swal.fire({
-                            toast: true,
-                            icon: 'error',
-                            title: "can't submit",
-                            animation: false,
-                            position: 'top-right',
-                            showConfirmButton: false,
-                            timer: 3000,
-                            timeProgressBar: true,
-                            didOpen: (toast) => {
-                                toast.addEventListener('mouseenter', Swal
-                                    .stopTimer)
-                                toast.addEventListener('mouseenter', Swal
-                                    .resumeTimer)
-                            }
-
-                        })
-                    }
-
-                },
-                error: function(error) {
-
-                    $('#cname').text(error.responseJSON.errors.cname);
-                    $('#cdes').text(error.responseJSON.errors.cdes);
-                }
-            });
-        });
-
-
-
-        $(document).on("click", ".del", function(stop) {
-            stop.preventDefault();
-
-            var del = $(this).data("del");
-            var type = $(this).data("type");
-            var msg = this;
-
-            Swal.fire({
-                title: 'Are you sure?',
-                text: "You won't be able to revert this!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, delete it!'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    $.ajax({
-                        url: "{{ url('deleteComment') }}",
-                        type: "POST",
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        },
-                        data: {
-                            id: del,
-                            type: type
-                        },
-                        success: function(res) {
-                            if (res.msg == 1) {
-                               
-                                Swal.fire({
-                                    toast: true,
-                                    icon: 'success',
-                                    title: 'Deleted',
-                                    animation: false,
-                                    position: 'top-right',
-                                    showConfirmButton: false,
-                                    timer: 3000,
-                                    timeProgressBar: true,
-                                    didOpen: (toast) => {
-                                        toast.addEventListener(
-                                            'mouseenter', Swal
-                                            .stopTimer)
-                                        toast.addEventListener(
-                                            'mouseenter', Swal
-                                            .resumeTimer)
-                                    }
-
-                                });
-                                location.reload(true);
-                            } else if (res.msg == 2) {
-                                Swal.fire({
-                                    toast: true,
-                                    icon: 'error',
-                                    title: 'Not Deleted',
-                                    animation: false,
-                                    position: 'top-right',
-                                    showConfirmButton: false,
-                                    timer: 3000,
-                                    timeProgressBar: true,
-                                    didOpen: (toast) => {
-                                        toast.addEventListener(
-                                            'mouseenter', Swal
-                                            .stopTimer)
-                                        toast.addEventListener(
-                                            'mouseenter', Swal
-                                            .resumeTimer)
-                                    }
-
-                                })
-                            }
+                    Swal.fire({
+                        toast: true,
+                        icon: 'success',
+                        title: 'Submit',
+                        animation: false,
+                        position: 'top-right',
+                        showConfirmButton: false,
+                        timer: 3000,
+                        timeProgressBar: true,
+                        didOpen: (toast) => {
+                            toast.addEventListener('mouseenter', Swal.stopTimer);
+                            toast.addEventListener('mouseenter', Swal.resumeTimer);
                         }
-                    })
+                    });
+                } else if (res.status == 2) {
+                    Swal.fire({
+                        toast: true,
+                        icon: 'error',
+                        title: "Can't submit",
+                        animation: false,
+                        position: 'top-right',
+                        showConfirmButton: false,
+                        timer: 3000,
+                        timeProgressBar: true,
+                        didOpen: (toast) => {
+                            toast.addEventListener('mouseenter', Swal.stopTimer);
+                            toast.addEventListener('mouseenter', Swal.resumeTimer);
+                        }
+                    });
                 }
-            });
+            },
+            error: function(error) {
+                $('#cname').text(error.responseJSON.errors.cname);
+                $('#cdes').text(error.responseJSON.errors.cdes);
+            }
         });
-
-
-    });
+    }
 
     function handleClick(index, message) {
 
