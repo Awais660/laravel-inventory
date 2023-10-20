@@ -40,12 +40,15 @@ class feedbacks extends Controller
 
     public function showfeedback(Request $request)
     {
+        $email=session()->get("useremail");
+        $permission=user::where('email', $email)->first();
         $feedback = Feedback::with('comments')->where('post_id', $request->post_id)->paginate(10);
   
         return response()->json([
             'html' => view('user.feedback', [
                 'feedbacks' => $feedback,
                 'post_id' => $request->post_id,
+                'permissions' => $permission,
             ])->render(),
         ]);
     }

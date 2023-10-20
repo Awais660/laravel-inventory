@@ -916,6 +916,7 @@
     }
 
     function getData() {
+        
             $.ajax({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
@@ -926,6 +927,7 @@
                     post_id: $('#post').val(),
                 },
                 success: function(response) {
+                   
                     $('#postFeedback').empty();
                     $('#postFeedback').append(response.html);
                 }
