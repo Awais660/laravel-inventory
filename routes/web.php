@@ -96,6 +96,8 @@ Route::group(["middleware" => ['userauth','emailVerified']], function () {
     Route::get("wishlist", "wishlist");
     Route::post("addcart", "addcart");
     Route::get("userLogout","userLogout");
+    Route::post("increase", "increase");
+    Route::post("removeProduct", "removeProduct");
     });
 });
 // ================================user controller route===============================

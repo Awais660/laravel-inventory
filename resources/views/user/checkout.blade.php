@@ -24,86 +24,74 @@
 
                                 <form action="#" id="checkout-form">
                                     <div class="row">
-                                        <div class="col-md-6">
+                                        <div class="col-md-12">
                                             <div class="form-group">
-                                                <label>First name
+                                                <label> name
                                                     <abbr class="required" title="required">*</abbr>
                                                 </label>
-                                                <input type="text" class="form-control" required />
+                                                <input type="text" value="{{$user->name}}" class="form-control" required />
                                             </div>
+                                        
+                                           
                                         </div>
-
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label>Last name
-                                                    <abbr class="required" title="required">*</abbr></label>
-                                                <input type="text" class="form-control" required />
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label>Company name (optional)</label>
-                                        <input type="text" class="form-control" />
                                     </div>
 
                                     <div class="select-custom">
                                         <label>Country / Region
                                             <abbr class="required" title="required">*</abbr></label>
                                         <select name="orderby" class="form-control">
-                                            <option value="" selected="selected">Vanuatu
+                                            <option value="pk" selected="selected">Pakistan
                                             </option>
-                                            <option value="1">Brunei</option>
-                                            <option value="2">Bulgaria</option>
-                                            <option value="3">Burkina Faso</option>
-                                            <option value="4">Burundi</option>
-                                            <option value="5">Cameroon</option>
+                                            <option value="in">India</option>
+                                            
                                         </select>
                                     </div>
 
                                     <div class="form-group mb-1 pb-2">
                                         <label>Street address
                                             <abbr class="required" title="required">*</abbr></label>
-                                        <input type="text" class="form-control" placeholder="House number and street name" required />
+                                        <input type="text" class="form-control"  value="{{$user->address1}}" placeholder="House number and street name" required />
                                     </div>
 
                                     <div class="form-group">
-                                        <input type="text" class="form-control" placeholder="Apartment, suite, unite, etc. (optional)" required />
+                                        <input type="text" class="form-control"  value="{{$user->address2}}" placeholder="Apartment, suite, unite, etc. (optional)" required />
                                     </div>
 
-                                    <div class="form-group">
-                                        <label>Town / City
-                                            <abbr class="required" title="required">*</abbr></label>
-                                        <input type="text" class="form-control" required />
+                             
+
+                                    <div class="select-custom">
+                                        <label>Town / City <abbr class="required" title="required">*</abbr></label>
+                                        <select name="orderby" class="form-control">
+                                            <option value="pb" selected="selected">Punjab</option>
+                                            <option value="sn">sindh</option>
+                                            
+                                        </select>
                                     </div>
 
                                     <div class="select-custom">
                                         <label>State / County <abbr class="required" title="required">*</abbr></label>
                                         <select name="orderby" class="form-control">
-                                            <option value="" selected="selected">NY</option>
-                                            <option value="1">Brunei</option>
-                                            <option value="2">Bulgaria</option>
-                                            <option value="3">Burkina Faso</option>
-                                            <option value="4">Burundi</option>
-                                            <option value="5">Cameroon</option>
+                                            <option value="fsd" selected="selected">faisalabad</option>
+                                            <option value="lr">Lahore</option>
+                                            
                                         </select>
                                     </div>
 
                                     <div class="form-group">
                                         <label>Postcode / Zip
                                             <abbr class="required" title="required">*</abbr></label>
-                                        <input type="text" class="form-control" required />
+                                        <input type="text"  value="{{$user->code}}" class="form-control" required />
                                     </div>
 
                                     <div class="form-group">
                                         <label>Phone <abbr class="required" title="required">*</abbr></label>
-                                        <input type="tel" class="form-control" required />
+                                        <input type="tel"  value="{{$user->number}}" class="form-control" required />
                                     </div>
 
                                     <div class="form-group">
                                         <label>Email address
                                             <abbr class="required" title="required">*</abbr></label>
-                                        <input type="email" class="form-control" required />
+                                        <input type="email"  value="{{$user->email}}" class="form-control" required />
                                     </div>
                                 </form>
                             </li>
@@ -155,7 +143,7 @@
                                         </td>
 
                                         <td class="price-col">
-                                            <span>$1,458.00</span>
+                                            <span>{{$total}}</span>
                                         </td>
                                     </tr>
                                     <tr class="order-shipping">
@@ -188,7 +176,7 @@
                                             <h4>Total</h4>
                                         </td>
                                         <td>
-                                            <b class="total-price"><span>$1,603.80</span></b>
+                                            <b class="total-price"><span>{{$total}}</span></b>
                                         </td>
                                     </tr>
                                 </tfoot>
@@ -203,7 +191,7 @@
                                 </div>
                             </div>
 
-                            <button type="submit" class="btn btn-dark btn-place-order" form="checkout-form">
+                            <button type="submit" id="checkout" class="btn btn-dark btn-place-order" form="checkout-form">
                                 Place order
                             </button>
                         </div>

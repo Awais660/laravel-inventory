@@ -31,8 +31,11 @@ class users extends Controller
 
     public function cart()
     {
+        $email=session()->get("useremail");
         $cat = Category::all();
-            return view('user.cart', compact("cat"));
+        $products = add_cart::all();
+        $total = add_cart::where("email",$email)->sum('tsrp');
+            return view('user.cart', compact("cat","products","total"));
     }
     
     public function cat()
@@ -43,8 +46,11 @@ class users extends Controller
 
     public function checkout()
     {
+        $email=session()->get("useremail");
+        $user = user::where('email',$email)->first();
+        $total = add_cart::where("email",$email)->sum('tsrp');
         $cat = Category::all();
-            return view('user.checkout', compact("cat"));
+            return view('user.checkout', compact("cat","user","total"));
     }
 
     public function contact()
@@ -128,7 +134,8 @@ class users extends Controller
     public function addcart(request $req)
     {
         $email=session()->get("useremail");
-        $exist = add_cart::where("pcode",$req->input('pcode'))->get();
+        $exist = add_cart::where("pcode",$req->input('pcode'))->first();
+        
         if($exist){
             return response()->json([
                 'msg' => 3,
@@ -422,6 +429,44 @@ function admin()
         
         } else {
             return redirect("code")->with("errormsg", "Can't reset password");
+        }
+    }
+
+
+    public function increase(request $req)
+    {
+        $tunit=$req->pqty*$req->punit;
+        $tsrp=$req->pqty*$req->psrp;
+        
+        $update=add_cart::where('pcode', $req->pcode)->where('email', $req->pemail)->update([
+            'pqty' => $req->pqty,
+            'tunit' => $tunit,
+            'tsrp' => $tsrp,
+        ]);
+
+        if($update){
+            return response()->json([
+                'msg' => 1,
+            ]);
+        }else{
+            return response()->json([
+                'msg' => 2,
+            ]);
+        }
+    }
+
+
+    public function removeProduct(request $req)
+    {
+        $delete = add_cart::where('pcode',$req->pcode)->where('pcode',$req->pcode)->delete();
+        if($delete){
+            return response()->json([
+                'msg' => 1,
+            ]);
+        }else{
+            return response()->json([
+                'msg' => 2,
+            ]);
         }
     }
 
