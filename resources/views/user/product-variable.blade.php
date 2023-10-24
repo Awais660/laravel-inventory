@@ -484,30 +484,33 @@
                                     <div class="col-md-6 col-xl-12">
                                         <div class="form-group">
                                             <label>Title <span class="required">*</span></label>
-                                            <input type="text" name="title" id="title"
+                                            <input type="text" name="title"
                                                 class="form-control form-control-sm" required>
                                         </div>
+                                        <b><span id="title" style="color:red"></span></b>
                                         <!-- End .form-group -->
                                     </div>
 
                                     <div class="col-md-6 col-xl-12">
                                         <div class="form-group">
                                             <label>Category <span class="required">*</span></label>
-                                            <select name="category" id="category" class="form-control form-control-sm"
-                                                id="category" required>
+                                            <select name="category" class="form-control form-control-sm"
+                                                 required>
                                                 <option value="">Select....</option>
                                                 <option value="bug report">Bug Report</option>
                                                 <option value="feature request">Feature Request</option>
                                                 <option value="improvement">Improvement</option>
                                             </select>
                                         </div>
+                                        <b><span id="category" style="color:red"></span></b>
                                         <!-- End .form-group -->
                                     </div>
                                 </div>
 
                                 <div class="form-group">
                                     <label>Your review <span class="required">*</span></label>
-                                    <textarea cols="5" rows="6" id="review" name="review" class="form-control form-control-sm"></textarea>
+                                    <textarea cols="5" rows="6" name="review" class="form-control form-control-sm"></textarea>
+                                    <b><span id="review" style="color:red"></span></b>
                                 </div>
                                 <!-- End .form-group -->
 
@@ -796,6 +799,9 @@
                 success: function(res) {
 
                     if (res.status == 1) {
+            $('#title').text("");
+            $('#category').text("");
+            $('#review').text("");
                         getData();
                         $('form').trigger("reset");
 
@@ -839,8 +845,9 @@
                 },
                 error: function(error) {
 
-                    $('#cname').text(error.responseJSON.errors.cname);
-                    $('#cdes').text(error.responseJSON.errors.cdes);
+                    $('#title').text(error.responseJSON.errors.title);
+                    $('#category').text(error.responseJSON.errors.category);
+                    $('#review').text(error.responseJSON.errors.review);
                 }
             });
         });
@@ -950,6 +957,7 @@
             },
             success: function(res) {
                 if (res.status == 1) {
+                    $('#comment').text("");
                     getData();
                     form.reset();
 
@@ -985,8 +993,7 @@
                 }
             },
             error: function(error) {
-                $('#cname').text(error.responseJSON.errors.cname);
-                $('#cdes').text(error.responseJSON.errors.cdes);
+                $('#comment').text(error.responseJSON.errors.comment);
             }
         });
     }

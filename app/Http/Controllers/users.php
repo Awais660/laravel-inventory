@@ -248,7 +248,7 @@ class users extends Controller
         // }
         session()->put("useremail", $email);
         return redirect("shop");
-    } elseif ($req->password == $admin->password) {
+    } elseif ($admin && Hash::check($req->password, $admin->password)) {
         // if(isset($req->remember)&&!empty($req->remember)){
         //     Cookie::make('email', $email, 120); 
         //     Cookie::make('password', $req->password, 120);
@@ -259,7 +259,7 @@ class users extends Controller
         session()->put("adminemail", $email);
         return redirect("admin");
     } else {
-        return redirect("login")->with("errormsg", "Email or password is incorrect");
+        return redirect("Login")->with("errormsg", "Email or password is incorrect");
     }
 }
 

@@ -62,8 +62,10 @@
                 <form action="#" class="reply-form2" id="commentForm">
                     <input type="hidden" name="post" id="post" value="{{ $post_id }}">
                     <input type="hidden" name="feed" id="feed" value="{{ $feedback->id }}">
-                    <input type="text" name="comment" id="comment" class="form-control"
+                    <input type="text" name="comment"  class="form-control"
                         placeholder="Your reply...">
+                        <b><span id="comment" style="color:red"></span></b>
+                        <br>
                     <button class="btn btn-success btn-sm reply-submit-btn reply"
                         onclick="submitReply(event, '{{ url('comment') }}', '{{ csrf_token() }}')">Submit
                         Reply</button>
