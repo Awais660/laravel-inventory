@@ -98,6 +98,7 @@ Route::group(["middleware" => ['userauth','emailVerified']], function () {
     Route::get("userLogout","userLogout");
     Route::post("increase", "increase");
     Route::post("removeProduct", "removeProduct");
+    Route::post("checkouts", "checkoutSubmit");
     });
 });
 // ================================user controller route===============================

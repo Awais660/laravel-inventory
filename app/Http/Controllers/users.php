@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
-use App\Models\{Category,product,product_attr,user,admin,add_cart,feedback};
+use App\Models\{Category,product,product_attr,user,admin,add_cart,feedback,order,online_user};
 
 class users extends Controller
 {
@@ -463,6 +463,78 @@ function admin()
             return response()->json([
                 'msg' => 1,
             ]);
+        }else{
+            return response()->json([
+                'msg' => 2,
+            ]);
+        }
+    }
+
+    public function checkoutSubmit(request $req)
+    {
+        $email=Session('useremail');
+
+        $code='ORD-' . \Str::random(4);
+        $user = new online_user;
+        $user->name = $req->input('name');
+        $user->email = $req->input('email');
+        $user->number = $req->input('number');
+        $user->country = $req->input('country');
+        $user->state = $req->input('state');
+        $user->city = $req->input('city');
+        $user->address1 = $req->input('address1');
+        $user->address2 = $req->input('address2');
+        $user->postal = $req->input('code');
+        $user->status = 0;
+        $user->payment = 0;
+        $user->order_no = $code;
+        $save=$user->save();
+        if($save){
+            $emailSubject="Order number is " . $code;
+
+            Mail::html('<p>Your order number is: <strong>' . $code . '</strong></p>', function($message) use ($email, $emailSubject) {
+                $message->to($email);
+                $message->subject($emailSubject);
+            });
+
+            $adds=add_cart::where('email',$req->input('email'))->get();
+            
+            foreach($adds as $add){
+                $order = new order;
+        $order->pname = $add->pname;
+        $order->pdes = $add->pdes;
+        $order->proprice = $add->unit;
+        $order->proimage = $add->image;
+        $order->quantity = $add->pqty;
+        $order->tprice = $add->tsrp;
+        $order->srp = $add->srp;
+        $order->size = $add->size;
+        $order->color = $add->color;
+        $order->code = $add->pcode;
+        $order->email = $add->email;
+        $order->status = 0;
+        $order->order = $code;
+        $save=$order->save();
+
+        $stock=product_attr::where('pcode', $add->pcode)->first();
+        $new=$stock->stock-$add->pqty;
+
+        product_attr::where('pcode', $add->pcode)->update([
+            'stock' => $new,
+        ]);
+        
+         $del=add_cart::where('email',$req->input('email'))->where('pcode',$add->pcode)->delete();
+         if($del){
+            $a=1;
+         }
+            }
+
+            if($a==1){
+            return response()->json([
+                'msg' => 1,
+            ]);
+        }
+
         }else{
             return response()->json([
                 'msg' => 2,
