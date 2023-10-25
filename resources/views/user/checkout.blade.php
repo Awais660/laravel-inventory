@@ -29,7 +29,7 @@
                                                 <label> name
                                                     <abbr class="required" title="required">*</abbr>
                                                 </label>
-                                                <input type="text" value="{{$user->name}}" class="form-control" required />
+                                                <input type="text" name="name" value="{{$user->name}}" class="form-control" required />
                                             </div>
                                         
                                            
@@ -39,7 +39,7 @@
                                     <div class="select-custom">
                                         <label>Country / Region
                                             <abbr class="required" title="required">*</abbr></label>
-                                        <select name="orderby" class="form-control">
+                                        <select name="country"  class="form-control">
                                             <option value="pk" selected="selected">Pakistan
                                             </option>
                                             <option value="in">India</option>
@@ -50,18 +50,18 @@
                                     <div class="form-group mb-1 pb-2">
                                         <label>Street address
                                             <abbr class="required" title="required">*</abbr></label>
-                                        <input type="text" class="form-control"  value="{{$user->address1}}" placeholder="House number and street name" required />
+                                        <input type="text" name="address1" class="form-control"  value="{{$user->address1}}" placeholder="House number and street name" required />
                                     </div>
 
                                     <div class="form-group">
-                                        <input type="text" class="form-control"  value="{{$user->address2}}" placeholder="Apartment, suite, unite, etc. (optional)" required />
+                                        <input type="text" class="form-control"  value="{{$user->address2}}" name="address2" placeholder="Apartment, suite, unite, etc. (optional)" required />
                                     </div>
 
                              
 
                                     <div class="select-custom">
                                         <label>Town / City <abbr class="required" title="required">*</abbr></label>
-                                        <select name="orderby" class="form-control">
+                                        <select name="city" class="form-control">
                                             <option value="pb" selected="selected">Punjab</option>
                                             <option value="sn">sindh</option>
                                             
@@ -70,7 +70,7 @@
 
                                     <div class="select-custom">
                                         <label>State / County <abbr class="required" title="required">*</abbr></label>
-                                        <select name="orderby" class="form-control">
+                                        <select name="state" class="form-control">
                                             <option value="fsd" selected="selected">faisalabad</option>
                                             <option value="lr">Lahore</option>
                                             
@@ -80,18 +80,18 @@
                                     <div class="form-group">
                                         <label>Postcode / Zip
                                             <abbr class="required" title="required">*</abbr></label>
-                                        <input type="text"  value="{{$user->code}}" class="form-control" required />
+                                        <input type="text" name="code"  value="{{$user->code}}" class="form-control" required />
                                     </div>
 
                                     <div class="form-group">
                                         <label>Phone <abbr class="required" title="required">*</abbr></label>
-                                        <input type="tel"  value="{{$user->number}}" class="form-control" required />
+                                        <input type="tel" name="number" value="{{$user->number}}" class="form-control" required />
                                     </div>
 
                                     <div class="form-group">
                                         <label>Email address
                                             <abbr class="required" title="required">*</abbr></label>
-                                        <input type="email"  value="{{$user->email}}" class="form-control" required />
+                                        <input type="email" name="email" value="{{$user->email}}" class="form-control" required />
                                     </div>
                                 </form>
                             </li>
@@ -206,3 +206,65 @@
         <!-- End .main -->
 
         @endsection
+        <script src="https://code.jquery.com/jquery-3.7.0.min.js"
+    integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+    <script>
+        $(document).ready(function(){
+   $("#checkout").on("click",function(g){
+       g.preventDefault();
+       var formdata=new FormData(data);
+      $.ajax({
+        url: "{{ url('checkout') }}",
+	type: "POST",
+	headers: {
+		'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+	},
+        data:formdata,
+        success:function(res){
+            // alert(res);
+            if(res==1){
+                Swal.fire({
+              toast:true,
+            icon:'success',
+            title:'Order success',
+            animation:false,
+            position: 'top-right',
+            showConfirmButton: false,
+            timer:3000,
+            timeProgressBar:true,
+            didOpen:(toast)=>{
+              toast.addEventListener('mouseenter',Swal.stopTimer)
+              toast.addEventListener('mouseenter',Swal.resumeTimer)
+            }
+           });
+setTimeout(anim,1000);
+                    function anim(){
+                        window.location.href="{{ url('shop') }}";
+             }
+            }
+             else if(res==2){
+                
+                
+
+                Swal.fire({
+              toast:true,
+            icon:'error',
+            title:'out of stock',
+            animation:false,
+            position: 'top-right',
+            showConfirmButton: false,
+            timer:3000,
+            timeProgressBar:true,
+            didOpen:(toast)=>{
+              toast.addEventListener('mouseenter',Swal.stopTimer)
+              toast.addEventListener('mouseenter',Swal.resumeTimer)
+            }
+           });
+             }
+            
+        }
+      });
+   });
+});
+        //  load_cart_item_number();
+    </script>
