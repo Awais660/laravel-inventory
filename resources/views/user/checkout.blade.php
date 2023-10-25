@@ -22,14 +22,14 @@
                             <li>
                                 <h2 class="step-title">Billing details</h2>
 
-                                <form action="#" id="checkout-form">
+                                <form id="data">
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="form-group">
                                                 <label> name
                                                     <abbr class="required" title="required">*</abbr>
                                                 </label>
-                                                <input type="text" name="name" value="{{$user->name}}" class="form-control" required />
+                                                <input type="text" name="name" id="name" value="{{$user->name}}" class="form-control" required />
                                             </div>
                                         
                                            
@@ -39,7 +39,7 @@
                                     <div class="select-custom">
                                         <label>Country / Region
                                             <abbr class="required" title="required">*</abbr></label>
-                                        <select name="country"  class="form-control">
+                                        <select name="country" id="country" class="form-control">
                                             <option value="pk" selected="selected">Pakistan
                                             </option>
                                             <option value="in">India</option>
@@ -50,18 +50,18 @@
                                     <div class="form-group mb-1 pb-2">
                                         <label>Street address
                                             <abbr class="required" title="required">*</abbr></label>
-                                        <input type="text" name="address1" class="form-control"  value="{{$user->address1}}" placeholder="House number and street name" required />
+                                        <input type="text" name="address1" id="address1" class="form-control"  value="{{$user->address1}}" placeholder="House number and street name" required />
                                     </div>
 
                                     <div class="form-group">
-                                        <input type="text" class="form-control"  value="{{$user->address2}}" name="address2" placeholder="Apartment, suite, unite, etc. (optional)" required />
+                                        <input type="text" class="form-control"  value="{{$user->address2}}" name="address2" id="address2" placeholder="Apartment, suite, unite, etc. (optional)" required />
                                     </div>
 
                              
 
                                     <div class="select-custom">
                                         <label>Town / City <abbr class="required" title="required">*</abbr></label>
-                                        <select name="city" class="form-control">
+                                        <select name="city" id="city" class="form-control">
                                             <option value="pb" selected="selected">Punjab</option>
                                             <option value="sn">sindh</option>
                                             
@@ -70,7 +70,7 @@
 
                                     <div class="select-custom">
                                         <label>State / County <abbr class="required" title="required">*</abbr></label>
-                                        <select name="state" class="form-control">
+                                        <select name="state" id="state" class="form-control">
                                             <option value="fsd" selected="selected">faisalabad</option>
                                             <option value="lr">Lahore</option>
                                             
@@ -80,18 +80,18 @@
                                     <div class="form-group">
                                         <label>Postcode / Zip
                                             <abbr class="required" title="required">*</abbr></label>
-                                        <input type="text" name="code"  value="{{$user->code}}" class="form-control" required />
+                                        <input type="text" id="code" name="code"  value="{{$user->code}}" class="form-control" required />
                                     </div>
 
                                     <div class="form-group">
                                         <label>Phone <abbr class="required" title="required">*</abbr></label>
-                                        <input type="tel" name="number" value="{{$user->number}}" class="form-control" required />
+                                        <input type="tel" id="number" name="number" value="{{$user->number}}" class="form-control" required />
                                     </div>
 
                                     <div class="form-group">
                                         <label>Email address
                                             <abbr class="required" title="required">*</abbr></label>
-                                        <input type="email" name="email" value="{{$user->email}}" class="form-control" required />
+                                        <input type="email" id="email" name="email" value="{{$user->email}}" class="form-control" required />
                                     </div>
                                 </form>
                             </li>
@@ -212,17 +212,38 @@
         $(document).ready(function(){
    $("#checkout").on("click",function(g){
        g.preventDefault();
-       var formdata=new FormData(data);
+    //    var formdata=new FormData(data);
+    var email = $("#email").val();
+     var name = $("#name").val();
+     var country = $("#country").val();
+     var address1 = $("#address1").val();
+     var address2 = $("#address2").val();
+     var city = $("#city").val();
+     var state = $("#state").val();
+     var code = $("#code").val();
+     var number = $("#number").val();
+       
       $.ajax({
-        url: "{{ url('checkout') }}",
+        url: "{{ url('checkouts') }}",
 	type: "POST",
 	headers: {
 		'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 	},
-        data:formdata,
+	// data:formdata,
+    data: {
+		email: email,
+		name: name,
+        country: country,
+		address1: address1,
+        address2: address2,
+		city: city,
+        state: state,
+		code: code,
+        number: number,
+	},
         success:function(res){
             // alert(res);
-            if(res==1){
+            if(res.msg==1){
                 Swal.fire({
               toast:true,
             icon:'success',
@@ -242,7 +263,7 @@ setTimeout(anim,1000);
                         window.location.href="{{ url('shop') }}";
              }
             }
-             else if(res==2){
+             else if(res.msg==2){
                 
                 
 

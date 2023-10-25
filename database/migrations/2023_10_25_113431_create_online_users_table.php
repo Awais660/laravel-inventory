@@ -13,20 +13,20 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('order', function (Blueprint $table) {
+        Schema::create('online_users', function (Blueprint $table) {
             $table->id();
-            $table->string('pname')->nullable();
-            $table->string('pdes')->nullable();
-            $table->string('proprice')->nullable();
-            $table->string('proimage')->nullable();
-            $table->string('quantity')->nullable();
-            $table->string('tprice')->nullable();
-            $table->string('srp')->nullable();
-            $table->string('code')->nullable();
+            $table->string('name')->nullable();
             $table->string('email')->nullable();
+            $table->string('number')->nullable();
+            $table->string('country')->nullable();
+            $table->string('state')->nullable();
+            $table->string('city')->nullable();
+            $table->string('address1')->nullable();
+            $table->string('address2')->nullable();
+            $table->string('postal')->nullable();
             $table->string('status')->nullable();
             $table->string('payment')->nullable();
-            $table->string('order')->nullable();
+            $table->string('order_no')->nullable();
             $table->timestamps();
         });
     }
@@ -38,6 +38,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('order');
+        Schema::dropIfExists('online_users');
     }
 };
