@@ -24,6 +24,9 @@ Route::group(["middleware" => ['authlogin']], function () {
 
     Route::controller(admins::class)->group(function(){
         Route::get("logout","logout");
+        Route::get("order","order");
+        Route::delete("orderDel/{id}","orderDel");
+        Route::get("approved","approved");
     });
 
 // ================================recources controller route===============================

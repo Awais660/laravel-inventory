@@ -102,6 +102,19 @@
 					</ul>
 				</li>
 
+				<li>
+					<a class="has-arrow" href="javascript:;">
+						<div class="parent-icon icon-color-8"><i class="bx bx-spa"></i>
+						</div>
+						<div class="menu-title">Orders</div>
+					</a>
+					<ul>
+						<li> <a href="{{url('order')}}"><i class="bx bx-right-arrow-alt"></i>View Orders</a>
+						</li>
+					
+					</ul>
+				</li>
+
 			</ul>
 			<!--end navigation-->
 		</div>
