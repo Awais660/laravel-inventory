@@ -5,7 +5,7 @@ use App\Http\Middleware\authlogin;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\emailVerified;
 use App\Http\Middleware\emailNotVerified;
-use App\Http\Controllers\StripePaymentController;
+// use App\Http\Controllers\StripePaymentController;
 use App\Http\Controllers\{admins,CategoryController,SubcategoryController,SupplierController,QuantityController,ColorController,ProductController,users,userController,feedbacks,comments,dashboardUser};
 /*
 |--------------------------------------------------------------------------
@@ -108,7 +108,7 @@ Route::group(["middleware" => ['userauth','emailVerified']], function () {
 
 // routes/web.php
 
-Route::get('/checkout', [StripePaymentController::class,'index']);
-Route::post('/checkout', [StripePaymentController::class,'makePayment'])->name('make.payment');
+// Route::get('/checkout', [StripePaymentController::class,'index']);
+// Route::post('/checkout', [StripePaymentController::class,'makePayment'])->name('make.payment');
 
 // ================================user controller route===============================

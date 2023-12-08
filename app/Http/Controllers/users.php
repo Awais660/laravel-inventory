@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use Stripe\Charge;
+use Stripe\Stripe;
 use App\Models\{Category,product,product_attr,user,admin,add_cart,feedback,order,online_user};
 
 class users extends Controller
@@ -472,6 +474,17 @@ function admin()
 
     public function checkoutSubmit(request $req)
     {
+
+        Stripe::setApiKey(env('STRIPE_SECRET'));
+
+            $charge = Charge::create([
+                'amount' => $req->stripe_price * 100, // Amount in cents
+                'currency' => 'PKR',
+                'source' => $req->stripeToken,
+                'description' => 'Example Charge',
+            ]);
+
+
         $email=Session('useremail');
 
         $code='ORD-' . \Str::random(4);
@@ -485,8 +498,10 @@ function admin()
         $user->address1 = $req->input('address1');
         $user->address2 = $req->input('address2');
         $user->postal = $req->input('code');
+        $user->transaction_id = $charge->id;
+        $user->amount = $req->input('stripe_price');
         $user->status = 0;
-        $user->payment = 0;
+        $user->payment = "Card";
         $user->order_no = $code;
         $save=$user->save();
         if($save){

@@ -93,7 +93,7 @@
                                             <abbr class="required" title="required">*</abbr></label>
                                         <input type="email" id="email" name="email" value="{{$user->email}}" class="form-control" required />
                                     </div>
-                                </form>
+                                
                             </li>
                         </ul>
                     </div>
@@ -146,30 +146,7 @@
                                             <span>{{$total}}</span>
                                         </td>
                                     </tr>
-                                    <tr class="order-shipping">
-                                        <td class="text-left" colspan="2">
-                                            <h4 class="m-b-sm">Shipping</h4>
-
-                                            <div class="form-group form-group-custom-control">
-                                                <div class="custom-control custom-radio d-flex">
-                                                    <input type="radio" class="custom-control-input" name="radio" checked />
-                                                    <label class="custom-control-label">Local Pickup</label>
-                                                </div>
-                                                <!-- End .custom-checkbox -->
-                                            </div>
-                                            <!-- End .form-group -->
-
-                                            <div class="form-group form-group-custom-control mb-0">
-                                                <div class="custom-control custom-radio d-flex mb-0">
-                                                    <input type="radio" name="radio" class="custom-control-input">
-                                                    <label class="custom-control-label">Flat Rate</label>
-                                                </div>
-                                                <!-- End .custom-checkbox -->
-                                            </div>
-                                            <!-- End .form-group -->
-                                        </td>
-
-                                    </tr>
+                                    
 
                                     <tr class="order-total">
                                         <td>
@@ -184,17 +161,83 @@
 
                             <div class="payment-methods">
                                 <h4 class="">Payment methods</h4>
-                                <div class="info-box with-icon p-0">
-                                    <p>
-                                        Sorry, it seems that there are no available payment methods for your state. Please contact us if you require assistance or wish to make alternate arrangements.
-                                    </p>
-                                </div>
-                            </div>
+                               
+                                <input type="hidden" name="stripe_price" id="stripe_price" class="form-control" value="{{$total}}" required />
 
+                                <input type="hidden" name="stripeToken" id="stripeToken" class="form-control" value="" required />
+
+                                <input type="hidden" name="key" id="key" class="form-control" value="{{ env('STRIPE_KEY') }}" required />
+
+
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label> Card Number
+                                                    <abbr class="required" title="required">*</abbr>
+                                                </label>
+                                                <input type="number" maxlength="i6" autocomplete='off' name="card_number" id="card_number" class="form-control card_number" required />
+                                                <b><span id="card_number" style="color:red"></span></b>
+                                            </div>
+                                        
+                                           
+                                        </div>
+                                    </div>
+
+                                    @php
+                            $year = date('Y');
+                            $year = substr( $year, -2);
+                        @endphp
+
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label> CVC
+                                                    <abbr class="required" title="required">*</abbr>
+                                                </label>
+                                                <input type="number" autocomplete='off' id="cvc_number" name="cvc_number"
+                                                placeholder='ex. 311' maxlength="4" class="form-control cvc_number" required />
+                                            </div>
+                                        
+                                           
+                                        </div>
+
+                                        <div class="col-md-3">
+                                            <div class="select-custom">
+                                                <label>Month
+                                                    <abbr class="required" title="required">*</abbr></label>
+                                                <select name="exp_month" id="exp_month" class="form-control exp_month">
+                                                    <option value="" selected>MM</option>
+                                                    @for ($i = 1; $i <= 12; $i++)
+                                                    <option value="{{ $i }}">
+                                                        {{ date('m', mktime(0, 0, 0, $i, 10)) }}
+                                                    </option>
+                                                @endfor
+                                                    
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-3">
+                                            <div class="select-custom">
+                                                <label>Year
+                                                    <abbr class="required" title="required">*</abbr></label>
+                                                <select name="exp_year" id="exp_year" class="form-control exp_year">
+                                                    <option value="" selected>YY</option>
+                                                    @for ($i = $year; $i <= $year + 10; $i++)
+                                                <option value="{{ $i }}">{{ $i }}
+                                                </option>
+                                            @endfor
+                                                    
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
                             <button type="submit" id="checkout" class="btn btn-dark btn-place-order" form="checkout-form">
                                 Place order
                             </button>
                         </div>
+                    </form>
                         <!-- End .cart-summary -->
                     </div>
                     <!-- End .col-lg-4 -->
@@ -208,10 +251,18 @@
         @endsection
         <script src="https://code.jquery.com/jquery-3.7.0.min.js"
     integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://js.stripe.com/v2/"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/jquery.validate.min.js"></script>
     <script>
+
+
         $(document).ready(function(){
    $("#checkout").on("click",function(g){
        g.preventDefault();
+       $('#card_number').text("");
+       $('#cvc_number').text("");
+       $('#exp_month').text("");
+       $('#exp_year').text("");
     //    var formdata=new FormData(data);
     var email = $("#email").val();
      var name = $("#name").val();
@@ -222,6 +273,33 @@
      var state = $("#state").val();
      var code = $("#code").val();
      var number = $("#number").val();
+     var stripe_price = $("#stripe_price").val();
+     var key = $("#key").val();
+     var card_number = $(".card_number").val();
+     var cvc_number = $(".cvc_number").val();
+     var exp_month = $(".exp_month").val();
+     var exp_year = $(".exp_year").val();
+
+     if (card_number != '' && cvc_number != '' && exp_month != '' && exp_year != '') {
+                if(card_number.length == 16 && (cvc_number.length >= 3 || cvc_number.length <= 4 )){
+                    Stripe.setPublishableKey(key);
+                    Stripe.createToken({
+                        number: card_number,
+                        cvc: cvc_number,
+                        exp_month: exp_month,
+                        exp_year: exp_year
+                    }, stripeResponseHandler);
+                }
+            }
+
+
+            function stripeResponseHandler(status, response) {
+            if (response.error) {
+                console.log(response.error.message);
+            } else {
+                var token = response['id'];
+                $("#stripeToken").val(token);
+          
        
       $.ajax({
         url: "{{ url('checkouts') }}",
@@ -240,6 +318,12 @@
         state: state,
 		code: code,
         number: number,
+        stripe_price: stripe_price,
+        stripeToken: token,
+        card_number: card_number,
+        cvc_number: cvc_number,
+		exp_month: exp_month,
+        exp_year: exp_year,
 	},
         success:function(res){
             // alert(res);
@@ -283,9 +367,20 @@ setTimeout(anim,1000);
            });
              }
             
-        }
+        },
+                error: function (error) {
+
+                    $('#card_number').text(error.responseJSON.errors.card_number);
+                    $('#cvc_number').text(error.responseJSON.errors.cvc_number);
+                    $('#exp_month').text(error.responseJSON.errors.exp_month);
+                    $('#exp_year').text(error.responseJSON.errors.exp_year);
+                }
       });
+
+    }
+        }
    });
 });
         //  load_cart_item_number();
     </script>
+
