@@ -11,42 +11,37 @@
 				<div class="page-content">
 					<!--breadcrumb-->
 					<div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
-						<div class="breadcrumb-title pe-3">Supplier</div>
+						<div class="breadcrumb-title pe-3">Role</div>
 						<div class="ps-3">
 							<nav aria-label="breadcrumb">
 								<ol class="breadcrumb mb-0 p-0">
 									<li class="breadcrumb-item"><a href="javascript:;"><i class="bx bx-home-alt"></i></a>
 									</li>
-									<li class="breadcrumb-item active" aria-current="page">View Supplier</li>
+									<li class="breadcrumb-item active" aria-current="page">View Role</li>
 								</ol>
 							</nav>
 						</div>
-						@can('supplier add')
-							
-						
 						<div class="ms-auto">
 							<div class="btn-group">
-							<a href="{{url('supplier/create')}}"><button type="button" class="btn btn-primary">Add Supplier</button></a>
+							<a href="{{url('role/create')}}"><button type="button" class="btn btn-primary">Add Role</button></a>
 								
 								
 							</div>
 						</div>
-						@endcan
 					</div>
 					<!--end breadcrumb-->
 					<div class="card">
 						<div class="card-body">
 							<div class="card-title">
-								<h4 class="mb-0">View Supplier</h4>
+								<h4 class="mb-0">View Role</h4>
 							</div>
 							<hr/>
 							<div class="table-responsive">
 								<table id="example2" class="table table-striped table-bordered" style="width:100%">
 									<thead>
 										<tr>
-											<th>Name</th>
-											<th>Email</th>
-											<th>Number</th>
+											<th>Role</th>
+											
 											<th>Update</th>
 											<th>Delete</th>
 										</tr>
@@ -54,11 +49,9 @@
 									<tbody>
 										@foreach($data as $fet) 
 										<tr>
-											<td>{{$fet['sup_name']}}</td>
-											<td>{{$fet['sup_email']}}</td>
-											<td>{{$fet['sup_number']}}</td>
-											<td><a class='btn btn-success' href="{{url('/supplier/'.$fet['sup_id'].'/edit/')}}">Update</a></td>
-                                            <td><button type='button' data-del="{{$fet['sup_id']}}" class='del btn btn-danger'>Delete</button></td>
+											<td>{{$fet['name']}}</td>
+											<td><a class='btn btn-success' href="{{url('/role/'.$fet['id'].'/edit/')}}">Update</a></td>
+                                            <td><button type='button' data-del="{{$fet['id']}}" class='del btn btn-danger'>Delete</button></td>
 										</tr>
 										@endforeach
                                     </tbody>
@@ -81,31 +74,31 @@
 				buttons: [{
                     extend: 'copy',
                     exportOptions: {
-                        columns: [0,1,2]
+                        columns: [0]
                     }
                 },
                 {
                     extend: 'excel',
                     exportOptions: {
-                        columns: [0,1,2]
+                        columns: [0]
                     }
                 },
                 {
                     extend: 'pdf',
                     exportOptions: {
-                        columns: [0,1,2]
+                        columns: [0]
                     }
                 },
                 {
                     extend: 'csv',
                     exportOptions: {
-                        columns: [0,1,2]
+                        columns: [0]
                     }
                 },
                 {
                     extend: 'print',
                     exportOptions: {
-                        columns: [0,1,2]
+                        columns: [0]
                     }
                 },
                 {
@@ -137,7 +130,7 @@ Swal.fire({
 }).then((result) => {
   if (result.isConfirmed) {
 $.ajax({
-  url: "/supplier/" + del,
+  url: "/role/" + del,
   method: "DELETE",
   success: function (res) {
 	if (res.msg == 1) {
@@ -149,7 +142,15 @@ $.ajax({
 		msg: 'Data has been deleted.'
 	});
 	$(msg).closest("tr").fadeOut();
-	}
+	}else if(res.msg == 2){
+		Lobibox.notify('info', {
+		pauseDelayOnHover: true,
+		continueDelayOnInactiveTab: false,
+		position: 'top right',
+		icon: 'bx bx-info-circle',
+		msg: 'Please delete sub category first.'
+	});
+}
 }
 })
   }

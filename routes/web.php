@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\emailVerified;
 use App\Http\Middleware\emailNotVerified;
 // use App\Http\Controllers\StripePaymentController;
-use App\Http\Controllers\{admins,CategoryController,SubcategoryController,SupplierController,QuantityController,ColorController,ProductController,users,userController,feedbacks,comments,dashboardUser};
+use App\Http\Controllers\{admins,CategoryController,SubcategoryController,SupplierController,QuantityController,ColorController,ProductController,users,userController,feedbacks,comments,dashboardUser,permissionController,roleController};
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -38,6 +38,9 @@ Route::resources([
     "/quantity"=>QuantityController::class,
     "/color"=>ColorController::class,
     "/product"=>ProductController::class,
+    "/permissions"=>PermissionController::class,
+    "/role"=>roleController::class,
+    "/users"=>UserController::class,
 ]);
 // ================================recources controller route===============================
 // ================================admin controller route===============================

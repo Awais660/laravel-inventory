@@ -22,7 +22,7 @@
                             <li>
                                 <h2 class="step-title">Billing details</h2>
 
-                                <form id="data">
+                                <form id="data" name="myform">
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="form-group">
@@ -172,11 +172,13 @@
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="form-group">
+                                                <div id="card_number">
                                                 <label> Card Number
                                                     <abbr class="required" title="required">*</abbr>
                                                 </label>
-                                                <input type="number" maxlength="i6" autocomplete='off' name="card_number" id="card_number" class="form-control card_number" required />
-                                                <b><span id="card_number" style="color:red"></span></b>
+                                                <input type="text" maxlength="i6" autocomplete='off' name="card_number" class="form-control card_number" required />
+                                                <b><span class="formerror" style="color:red"></span></b>
+                                            </div>
                                             </div>
                                         
                                            
@@ -191,11 +193,14 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group">
+                                                <div id="cvc_number">
                                                 <label> CVC
                                                     <abbr class="required" title="required">*</abbr>
                                                 </label>
-                                                <input type="number" autocomplete='off' id="cvc_number" name="cvc_number"
+                                                <input type="text" autocomplete='off' name="cvc_number"
                                                 placeholder='ex. 311' maxlength="4" class="form-control cvc_number" required />
+                                                <b><span class="formerror" style="color:red"></span></b>
+                                            </div>
                                             </div>
                                         
                                            
@@ -203,9 +208,10 @@
 
                                         <div class="col-md-3">
                                             <div class="select-custom">
+                                                <div id="exp_month">
                                                 <label>Month
                                                     <abbr class="required" title="required">*</abbr></label>
-                                                <select name="exp_month" id="exp_month" class="form-control exp_month">
+                                                <select name="exp_month" class="form-control exp_month">
                                                     <option value="" selected>MM</option>
                                                     @for ($i = 1; $i <= 12; $i++)
                                                     <option value="{{ $i }}">
@@ -214,14 +220,17 @@
                                                 @endfor
                                                     
                                                 </select>
+                                                <b><span class="formerror" style="color:red"></span></b>
+                                                </div>
                                             </div>
                                         </div>
 
                                         <div class="col-md-3">
                                             <div class="select-custom">
+                                                <div id="exp_year">
                                                 <label>Year
                                                     <abbr class="required" title="required">*</abbr></label>
-                                                <select name="exp_year" id="exp_year" class="form-control exp_year">
+                                                <select name="exp_year" class="form-control exp_year">
                                                     <option value="" selected>YY</option>
                                                     @for ($i = $year; $i <= $year + 10; $i++)
                                                 <option value="{{ $i }}">{{ $i }}
@@ -229,6 +238,8 @@
                                             @endfor
                                                     
                                                 </select>
+                                                <b><span class="formerror" style="color:red"></span></b>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -255,14 +266,70 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/jquery.validate.min.js"></script>
     <script>
 
+function clearErrors(){
+
+errors = document.getElementsByClassName('formerror');
+for(let item of errors)
+{
+    item.innerHTML = "";
+}}
+
+
+        function seterror(id, error){
+            element = document.getElementById(id);
+    element.getElementsByClassName('formerror')[0].innerHTML = error;
+        }
+
+
 
         $(document).ready(function(){
    $("#checkout").on("click",function(g){
        g.preventDefault();
-       $('#card_number').text("");
-       $('#cvc_number').text("");
-       $('#exp_month').text("");
-       $('#exp_year').text("");
+
+       var returnval=true;
+           
+           clearErrors();
+           
+           /// end img
+           var card_number = document.forms['myform']["card_number"].value;
+    
+    if (card_number.search(/^[0-9]*$/) ==-1){
+        seterror("card_number", "*not use alphabathes");
+        returnval = false;
+            }
+
+            if (card_number.length!=16){
+        seterror("card_number", "*Length should be equal to 16");
+        returnval = false;
+            }
+
+            var cvc_number = document.forms['myform']["cvc_number"].value;
+
+            if (cvc_number.search(/^[0-9]*$/) ==-1){
+        seterror("cvc_number", "*not use alphabathes");
+        returnval = false;
+            }
+
+            if (cvc_number.length!=4){
+        seterror("cvc_number", "*Length should be equal to 4");
+        returnval = false;
+            }
+
+            var exp_month = document.forms['myform']["exp_month"].value;
+
+            if (exp_month.length==""){
+        seterror("exp_month", "exp_month  is required");
+        returnval = false;
+            }
+
+            var exp_year = document.forms['myform']["exp_year"].value;
+
+            if (exp_year.length==""){
+        seterror("exp_year", "exp_year is required");
+        returnval = false;
+            }
+
+            if(returnval==true){
     //    var formdata=new FormData(data);
     var email = $("#email").val();
      var name = $("#name").val();
@@ -368,17 +435,13 @@ setTimeout(anim,1000);
              }
             
         },
-                error: function (error) {
-
-                    $('#card_number').text(error.responseJSON.errors.card_number);
-                    $('#cvc_number').text(error.responseJSON.errors.cvc_number);
-                    $('#exp_month').text(error.responseJSON.errors.exp_month);
-                    $('#exp_year').text(error.responseJSON.errors.exp_year);
-                }
       });
 
     }
         }
+    }
+    
+    return returnval;
    });
 });
         //  load_cart_item_number();

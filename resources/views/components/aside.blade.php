@@ -115,6 +115,51 @@
 					</ul>
 				</li>
 
+				<li>
+					<a class="has-arrow" href="javascript:;">
+						<div class="parent-icon icon-color-9"><i class="bx bx-spa"></i>
+						</div>
+						<div class="menu-title">Permission</div>
+					</a>
+					<ul>
+						<li> <a href="{{url('permissions/create')}}"><i class="bx bx-right-arrow-alt"></i>Add Permission</a>
+						</li>
+						<li> <a href="{{url('permissions')}}"><i class="bx bx-right-arrow-alt"></i>View Permission</a>
+						</li>
+					
+					</ul>
+				</li>
+
+				<li>
+					<a class="has-arrow" href="javascript:;">
+						<div class="parent-icon icon-color-10"><i class="bx bx-spa"></i>
+						</div>
+						<div class="menu-title">Role</div>
+					</a>
+					<ul>
+						<li> <a href="{{url('role/create')}}"><i class="bx bx-right-arrow-alt"></i>Add Role</a>
+						</li>
+						<li> <a href="{{url('role')}}"><i class="bx bx-right-arrow-alt"></i>View Role</a>
+						</li>
+					
+					</ul>
+				</li>
+
+				<li>
+					<a class="has-arrow" href="javascript:;">
+						<div class="parent-icon icon-color-11"><i class="bx bx-spa"></i>
+						</div>
+						<div class="menu-title">User</div>
+					</a>
+					<ul>
+						<li> <a href="{{url('users/create')}}"><i class="bx bx-right-arrow-alt"></i>Add User</a>
+						</li>
+						<li> <a href="{{url('users')}}"><i class="bx bx-right-arrow-alt"></i>View User</a>
+						</li>
+					
+					</ul>
+				</li>
+
 			</ul>
 			<!--end navigation-->
 		</div>
