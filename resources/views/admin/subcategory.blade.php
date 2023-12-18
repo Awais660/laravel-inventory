@@ -21,6 +21,7 @@
 								</ol>
 							</nav>
 						</div>
+						@can("sub category add")
 						<div class="ms-auto">
 							<div class="btn-group">
 							<a href="{{url('subcategory/create')}}"><button type="button" class="btn btn-primary">Add Sub Category</button></a>
@@ -28,6 +29,7 @@
 								
 							</div>
 						</div>
+						@endcan
 					</div>
 					<!--end breadcrumb-->
 					<div class="card">

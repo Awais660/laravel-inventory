@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Stripe\Charge;
 use Stripe\Stripe;
+use Illuminate\Support\Facades\Auth;
 use App\Models\{Category,product,product_attr,user,admin,add_cart,feedback,order,online_user};
 
 class users extends Controller
@@ -230,40 +231,44 @@ class users extends Controller
     }
 
     public function login(Request $req)
-{
-    $req->validate([
-        "email" => 'required|string|email|max:255',
-        "password" => 'required|string',
-    ]);
-
-    $email = $req->email;
-    $user = User::where('email', $email)->first();
-    $admin = Admin::where('email', $email)->first();
-
-    if ($user && Hash::check($req->password, $user->password)) {
-        // if(isset($req->remember)&&!empty($req->remember)){
-        //     Cookie::make('email', $email, 120); 
-        //     Cookie::make('password', $req->password, 120);
-        // }else{
-        //     Cookie::queue(Cookie::forget('email'));
-        //     Cookie::queue(Cookie::forget('password'));
-        // }
-        session()->put("useremail", $email);
-        return redirect("shop");
-    } elseif ($admin && Hash::check($req->password, $admin->password)) {
-        // if(isset($req->remember)&&!empty($req->remember)){
-        //     Cookie::make('email', $email, 120); 
-        //     Cookie::make('password', $req->password, 120);
-        // }else{
-        //     Cookie::queue(Cookie::forget('email'));
-        //     Cookie::queue(Cookie::forget('password'));
-        // }
-        session()->put("adminemail", $email);
-        return redirect("admin");
-    } else {
-        return redirect("Login")->with("errormsg", "Email or password is incorrect");
+    {
+        $req->validate([
+            "email" => 'required|string|email|max:255',
+            "password" => 'required|string',
+        ]);
+    
+        $email = $req->email;
+        $user = User::where('email', $email)->first();
+        $admin = Admin::where('email', $email)->first();
+    
+        if ($user && Hash::check($req->password, $user->password) && Auth::guard('web')->attempt(['email' => $email, 'password' => $req->password])) {
+            // Authentication successful for the User model
+            // if(isset($req->remember) && !empty($req->remember)){
+            //     Cookie::make('email', $email, 120); 
+            //     Cookie::make('password', $req->password, 120);
+            // } else {
+            //     Cookie::queue(Cookie::forget('email'));
+            //     Cookie::queue(Cookie::forget('password'));
+            // }
+            session()->put("useremail", $email);
+            return redirect("shop");
+        } elseif ($admin && Hash::check($req->password, $admin->password) && Auth::guard('admin')->attempt(['email' => $email, 'password' => $req->password])) {
+            // Authentication successful for the Admin model
+            // if(isset($req->remember) && !empty($req->remember)){
+            //     Cookie::make('email', $email, 120); 
+            //     Cookie::make('password', $req->password, 120);
+            // } else {
+            //     Cookie::queue(Cookie::forget('email'));
+            //     Cookie::queue(Cookie::forget('password'));
+            // }
+            session()->put("adminemail", $email);
+            return redirect("admin");
+        } else {
+            // Authentication failed
+            return redirect("Login")->with("errormsg", "Email or password is incorrect");
+        }
     }
-}
+    
 
 function admin()
     {
